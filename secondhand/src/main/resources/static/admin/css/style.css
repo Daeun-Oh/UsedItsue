@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+* {
+    box-sizing: border-box;
+    outline: none;
+    font-family: "Nanum Gothic", sans-serif;
+}
+
+html {
+    font-size: 13px;
+}
+
+body {
+    margin: 0;
+    color: #000;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+}
+
+ol, ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li, dl, dt, dd {
+    padding: 0;
+    margin: 0;
+}
+
+img {
+    border: 0;
+}
+
+/* 관리자 기본 레이아웃 구성 S */
+header {
+    height: 80px;
+    background: #fff;
+    border-bottom: 3px solid #000;
+}
+
+main {
+    display: flex;
+}
+
+main > aside {
+    width: 200px;
+    background: #d5d5d5;
+    min-height: 850px;
+    margin-right: 15px;
+}
+
+main > .main-content {
+    flex-grow: 1;
+
+}
+
+/* 관리자 기본 레이아웃 구성 E */
+
+/* 메뉴 공통 S */
+main > aside a {
+    display: block;
+    padding: 25px 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-bottom: 1px solid #212121;
+}
+
+main > aside a.on {
+    background: #212121;
+    color: #fff;
+}
+
+main > .main-content > nav {
+    box-shadow: 2px 2px 10px #212121;
+    margin: 30px 0;
+    display: flex;
+    height: 50px;
+    background: #fff;
+    border-radius: 5px;
+}
+
+main > .main-content > nav a {
+    line-height: 50px;
+    font-size: 1.3rem;
+    padding: 0 35px;
+}
+
+main > .main-content > nav a.on {
+    background: #212121;
+    color: #fff;
+}
+/* 메뉴 공통 E */
