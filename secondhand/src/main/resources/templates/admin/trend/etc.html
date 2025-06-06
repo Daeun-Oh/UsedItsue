@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+
+<th:block layout:fragment="addCommonScript">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</th:block>
+
+<section layout:fragment="content">
+    <h1>오늘의 트렌드</h1>
+    <form name="frmSearch" method="get" th:object="${trendSearch}" autocomplete="off">
+        사이트 주소 :
+        <input type="text" name="siteUrl" th:field="*{siteUrl}">
+        <button type="submit">조회하기</button>
+    </form>
+
+    1. 워드 클라우드 이미지<br>
+    2. 파이 그래프<br>
+
+    <h2>일주일간의 누적 트렌드</h2>
+
+    1. 워드 클라우드 이미지<br>
+    2. 일자별 키워드별 꺾은선 그래프
+
+    <h2>한달간의 누적 트렌드</h2>
+    1. 워드 클라우드 이미지<br>
+    2. 일자별 키워드별 꺾은선 그래프
+</section>
+</html>
