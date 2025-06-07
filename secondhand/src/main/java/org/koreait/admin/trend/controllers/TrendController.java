@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.trend.entities.EtcTrend;
-import org.koreait.global.search.CommonSearch
+import org.koreait.global.search.CommonSearch;
 import org.koreait.trend.entities.Trend;
 import org.koreait.trend.services.TrendInfoService;
 import org.springframework.stereotype.Controller;
@@ -158,9 +158,11 @@ public class TrendController extends CommonController {
         if (code.equals("news")) {
             addScript.add("trend/news"); // /static/js/trend/news.js
             pageTitle = "오늘의 뉴스 트렌드";
-        } else if (code.equals("etc")) {
+        } else if (code.equals("daily")) {
             // 팀별 소스 넣어주세요..
-            addScript.add("trend/etc"); // /static/js/trend/etc.js
+            addScript.add("trend/daily"); // /static/js/trend/daily.js
+            addScript.add("trend/weekly"); // /static/js/trend/weekly.js
+            addScript.add("trend/monthly"); // /static/js/trend/monthly.js
             pageTitle = "오늘의 사이트별 트렌드";
         }
 
