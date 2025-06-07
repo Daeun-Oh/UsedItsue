@@ -39,6 +39,10 @@
     <div id="weekly-chart-data" th:attr="data-json=${weekly}" style="display:none"></div>
     <canvas id="weeklyChart" width="800" height="400"></canvas>
 
+    <canvas id="weeklyChart"></canvas>
+
+    <script type="application/json" id="chart-data" th:utext="${items}"></script>
+
     <h2>한달간의 누적 트렌드</h2>
 
     <!-- 한달 워드클라우드 -->

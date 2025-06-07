@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.trend.entities.EtcTrend;
+import org.koreait.global.search.CommonSearch
 import org.koreait.trend.entities.Trend;
 import org.koreait.trend.services.TrendInfoService;
 import org.springframework.stereotype.Controller;
@@ -17,8 +18,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -47,6 +51,8 @@ public class TrendController extends CommonController {
         commonProcess("news", model);
 
         Trend item = infoService.getLatest("NEWS");
+        System.out.println("item(controller): " + item);
+
         model.addAttribute("item", item);
 
         return "admin/trend/news";
@@ -58,8 +64,7 @@ public class TrendController extends CommonController {
      * URL: /admin/trend/etc
      */
     @GetMapping("/etc")
-    public String etc(@ModelAttribute TrendSearch search, Model model, BindingResult result) {
-        // 공통 처리 (타이틀, 스크립트 등)
+    public String etc(@ModelAttribute TrendSearch search, Model model, BindingResult result) throws Exception {
         commonProcess("etc", model);
         // URL 입력 누락 또는 유효성 오류 시, 초기 화면으로 복귀
         if (!StringUtils.hasText(search.getSiteUrl()) || result.hasErrors()) {
@@ -101,6 +106,40 @@ public class TrendController extends CommonController {
             model.addAttribute("monthly", "[]");
         }
 
+        CommonSearch commonSearch = new CommonSearch();
+        commonSearch.setSDate(null);
+        commonSearch.setEDate(null);
+
+        List<Trend> items = infoService.getList("NEWS", commonSearch);
+
+        //System.out.println("items: " + items);
+
+        /* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 */
+
+        Map<String, Trend> trendMap = new LinkedHashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
+
+        for (Trend trend : items) {
+            String dateKey = trend.getCreatedAt().format(formatter);
+            trendMap.put(dateKey, trend); // 날짜 중복이 없다는 전제
+        }
+
+        //System.out.println("items(map): " + trendMap);
+
+        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
+
+        // Jackson ObjectMapper 생성 및 설정
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
+
+        // Map을 JSON 문자열로 변환
+        String itemsJson = mapper.writeValueAsString(trendMap);
+
+        //System.out.println("items(json): " + itemsJson);
+
+        model.addAttribute("items", itemsJson);
+
         return "admin/trend/etc";
     }
 
@@ -120,7 +159,7 @@ public class TrendController extends CommonController {
             addScript.add("trend/news"); // /static/js/trend/news.js
             pageTitle = "오늘의 뉴스 트렌드";
         } else if (code.equals("etc")) {
-            // 팀별 소스 넣어주세요...
+            // 팀별 소스 넣어주세요..
             addScript.add("trend/etc"); // /static/js/trend/etc.js
             pageTitle = "오늘의 사이트별 트렌드";
         }
