@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TrendRepository extends ListCrudRepository<Trend, Long> {
+    // NEWS 카테고리 최신 트렌드 (news 페이지에서 사용)
     @Query("SELECT * FROM TREND WHERE category=:category ORDER BY createdAt DESC LIMIT 1")
     Optional<Trend> getLatest(@Param("category") String category);
 
