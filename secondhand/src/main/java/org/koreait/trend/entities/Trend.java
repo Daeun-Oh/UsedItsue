@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.time.LocalDateTime;
+
 @Data
 @Table("TREND")
 public class Trend extends BaseEntity {
@@ -17,4 +19,7 @@ public class Trend extends BaseEntity {
     private String wordCloud;
 
     private String keywords;
+
+    @Column("createdAt")
+    private LocalDateTime createdAt;
 }

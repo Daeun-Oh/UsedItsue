@@ -26,13 +26,14 @@ public class TrendInfoService {
      */
     public Trend getLatest(String category) {
         Trend item = repository.getLatest(category).orElseThrow(TrendNotFoundException::new);
+        System.out.println("item: " + item);
 
         return item;
     }
 
 
     /**
-     * 특정 날자의 트렌드 데이터 1개
+     * 특정 날짜의 트렌드 데이터 1개
      * @param date
      * @return
      */
@@ -47,7 +48,16 @@ public class TrendInfoService {
      * @return
      */
     public List<Trend> getList(String category, CommonSearch search) {
+        LocalDate sDate = search.getSDate();
+        LocalDate eDate = search.getEDate();
 
-        return null;
+        // 날짜가 없는 경우 기본값 설정 (최근 7일)
+        if (sDate == null) sDate = LocalDate.now().minusDays(6);
+        if (eDate == null) eDate = LocalDate.now();
+
+        //System.out.println("sDate:" + sDate + " eDate:" + eDate);
+        List<Trend> items =  repository.getList(category, sDate, eDate);
+
+        return items;
     }
 }
