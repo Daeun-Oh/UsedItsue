@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", function () {
     /* 트렌드 통계 데이터 처리 E */
 
     // Chart.js 그래프 생성
-    const ctx = document.getElementById('weeklyChart').getContext('2d');
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
     const weeklyChart = new Chart(ctx, {
         type: 'line',
         data: {
