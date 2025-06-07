@@ -5,7 +5,6 @@
 
 <th:block layout:fragment="addCommonScript">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:src="@{/js/trend/etc.js}"></script>
 </th:block>
 
 <section layout:fragment="content">
@@ -33,8 +32,9 @@
     <!-- 오늘 파이 차트 -->
     <div th:if="${today != null}">
         <div id="chart-data" th:attr="data-json=${today.keywords}" style="display:none;"></div>
-        <canvas id="myChart" width="400" height="400"></canvas>
+        <canvas id="dailyChart" width="400" height="400"></canvas>
     </div>
+
 
     <!-- 주간 영역 -->
     <div id="weeklySection" style="display:block;">
@@ -63,15 +63,34 @@
             document.getElementById("monthlySection").style.display = "none";
         }
 
+    <h2>일주일간의 누적 트렌드</h2>
+
+    <!-- 일주일 워드클라우드 -->
+
+    <!-- 일주일 꺽은선 차트 -->
+    <canvas id="weeklyChart" width="800" height="400"></canvas>
+
+    <script type="application/json" id="chart-data-weekly" th:utext="${items}"></script>
+
+
         function showMonthly() {
             document.getElementById("weeklySection").style.display = "none";
             document.getElementById("monthlySection").style.display = "block";
         }
+
 
         // 기본값은 주간 표시
         window.addEventListener('DOMContentLoaded', () => {
             showWeekly();
         });
     </script>
+
+    <!-- 한달 워드클라우드 -->
+<!--    <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">-->
+<!--        <img th:src="${monthlyList[monthlyList.size() - 1].wordCloud}" alt="한달 워드클라우드" />-->
+<!--    </div>-->
+    <!-- 한달 꺽은선 차트 -->
+<!--    <div id="monthly-chart-data" th:attr="data-json=${monthly}" style="display:none"></div>-->
+<!--    <canvas id="monthlyChart" width="800" height="400"></canvas>-->
 </section>
 </html>

@@ -75,6 +75,8 @@ public class EtcTrendService {
                 trend.setWordCloud(request.getContextPath() + fileProperties.getUrl() + "/trend/" + result.getImage());
                 trend.setKeywords(om.writeValueAsString(result.getKeywords()));
 
+                System.out.println(trend);
+
                 // 저장
                 etcTrendRepository.save(trend);
             }

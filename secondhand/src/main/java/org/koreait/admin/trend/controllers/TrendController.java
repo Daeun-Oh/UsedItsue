@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
-import org.koreait.trend.entities.EtcTrend;
 import org.koreait.global.search.CommonSearch;
+import org.koreait.trend.entities.EtcTrend;
 import org.koreait.trend.entities.Trend;
 import org.koreait.trend.services.TrendInfoService;
 import org.springframework.stereotype.Controller;
@@ -66,6 +66,49 @@ public class TrendController extends CommonController {
     @GetMapping("/etc")
     public String etc(@ModelAttribute TrendSearch search, Model model, BindingResult result) throws Exception {
         commonProcess("etc", model);
+
+        /**
+         * 일주일 트렌드 데이터 불러오기
+         */
+
+        CommonSearch commonSearch = new CommonSearch();
+        commonSearch.setSDate(null);
+        commonSearch.setEDate(null);
+
+        List<Trend> items = infoService.getList("NEWS", commonSearch);
+
+        //System.out.println("items: " + items);
+
+        /* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 */
+
+        Map<String, Trend> trendMap = new LinkedHashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
+
+        for (Trend trend : items) {
+            String dateKey = trend.getCreatedAt().format(formatter);
+            trendMap.put(dateKey, trend); // 날짜 중복이 없다는 전제
+        }
+
+        //System.out.println("items(map): " + trendMap);
+
+        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
+
+        // Jackson ObjectMapper 생성 및 설정
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
+
+        // Map을 JSON 문자열로 변환
+        String itemsJson = mapper.writeValueAsString(trendMap);
+
+        System.out.println("items(json): " + itemsJson);
+
+        model.addAttribute("items", itemsJson);
+
+        /**
+         * 사이트 url 입력 받고, 정보 수집 및 저장
+         */
+
         // URL 입력 누락 또는 유효성 오류 시, 초기 화면으로 복귀
         if (!StringUtils.hasText(search.getSiteUrl()) || result.hasErrors()) {
             model.addAttribute("search", search);
@@ -74,6 +117,8 @@ public class TrendController extends CommonController {
         }
 
         String siteUrl = search.getSiteUrl();
+
+        //System.out.println(siteUrl);
 
         // 1. 입력한 사이트의 트렌드 정보 수집 및 저장
         infoService.fetchAndSaveEtcTrend(siteUrl);
@@ -106,40 +151,6 @@ public class TrendController extends CommonController {
             model.addAttribute("monthly", "[]");
         }
 
-        CommonSearch commonSearch = new CommonSearch();
-        commonSearch.setSDate(null);
-        commonSearch.setEDate(null);
-
-        List<Trend> items = infoService.getList("NEWS", commonSearch);
-
-        //System.out.println("items: " + items);
-
-        /* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 */
-
-        Map<String, Trend> trendMap = new LinkedHashMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
-
-        for (Trend trend : items) {
-            String dateKey = trend.getCreatedAt().format(formatter);
-            trendMap.put(dateKey, trend); // 날짜 중복이 없다는 전제
-        }
-
-        //System.out.println("items(map): " + trendMap);
-
-        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
-
-        // Jackson ObjectMapper 생성 및 설정
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
-
-        // Map을 JSON 문자열로 변환
-        String itemsJson = mapper.writeValueAsString(trendMap);
-
-        //System.out.println("items(json): " + itemsJson);
-
-        model.addAttribute("items", itemsJson);
-
         return "admin/trend/etc";
     }
 
@@ -156,13 +167,17 @@ public class TrendController extends CommonController {
         List<String> addScript = new ArrayList<>();
 
         if (code.equals("news")) {
-            addScript.add("trend/news"); // /static/js/trend/news.js
+            addScript.add("trend/news");
             pageTitle = "오늘의 뉴스 트렌드";
         } else if (code.equals("etc")) {
             // 팀별 소스 넣어주세요..
-            addScript.add("trend/etc"); // /static/js/trend/etc.js
+            addScript.add("trend/daily");
+            addScript.add("trend/weekly");
+            addScript.add("trend/monthly");
             pageTitle = "오늘의 사이트별 트렌드";
         }
+
+        System.out.println(addScript);
 
         model.addAttribute("subCode", code);         // 서브 탭 메뉴 활성화용
         model.addAttribute("addScript", addScript);  // 필요한 JS 추가
