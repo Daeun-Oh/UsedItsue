@@ -11,6 +11,10 @@
         <link rel="stylesheet" type="text/css" th:href="@{/common/css/style.css?v={v}(v=${@utils.version()})}">
         <link rel="stylesheet" type="text/css" th:each="cssFile : ${addCommonCss}"
               th:href="@{/common/css/{css}.css?v={v}(css=${cssFile}, v=${@utils.version()})}">
+
+        <link rel="stylesheet" type="text/css"
+              th:href="@{/admin/css/trend/style.css?v={v}(v=${@utils.version()})}">
+
         <th:block layout:fragment="addCommonCss"></th:block>
 
         <link rel="stylesheet" type="text/css" th:href="@{/admin/css/style.css?v={v}(v=${@utils.version()})}">
