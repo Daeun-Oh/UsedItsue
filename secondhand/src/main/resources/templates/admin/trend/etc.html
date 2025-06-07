@@ -5,26 +5,48 @@
 
 <th:block layout:fragment="addCommonScript">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/js/trend/etc.js}"></script>
 </th:block>
 
 <section layout:fragment="content">
     <h1>오늘의 트렌드</h1>
-    <form name="frmSearch" method="get" th:object="${trendSearch}" autocomplete="off">
+
+    <form name="frmSearch" method="get" th:object="${search}" autocomplete="off">
         사이트 주소 :
-        <input type="text" name="siteUrl" th:field="*{siteUrl}">
+        <input type="text" name="siteUrl" th:field="*{siteUrl}" required>
+        <div th:if="${#fields.hasErrors('siteUrl')}" th:errors="*{siteUrl}" style="color:red"></div>
         <button type="submit">조회하기</button>
     </form>
 
-    1. 워드 클라우드 이미지<br>
-    2. 파이 그래프<br>
+    <!-- 오늘 워드클라우드 -->
+    <div th:if="${today != null}">
+        <img th:src="${today.wordCloud}" alt="오늘의 워드클라우드" />
+    </div>
+
+    <!-- 오늘 파이 차트 -->
+    <div th:if="${today != null}">
+        <div id="chart-data" th:attr="data-json=${today.keywords}" style="display:none;"></div>
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>
 
     <h2>일주일간의 누적 트렌드</h2>
 
-    1. 워드 클라우드 이미지<br>
-    2. 일자별 키워드별 꺾은선 그래프
+    <!-- 일주일 워드클라우드 -->
+    <div th:if="${weeklyList != null and #lists.size(weeklyList) > 0}">
+        <img th:src="${weeklyList[weeklyList.size() - 1].wordCloud}" alt="일주일 워드클라우드" />
+    </div>
+    <!-- 일주일 꺽은선 차트 -->
+    <div id="weekly-chart-data" th:attr="data-json=${weekly}" style="display:none"></div>
+    <canvas id="weeklyChart" width="800" height="400"></canvas>
 
     <h2>한달간의 누적 트렌드</h2>
-    1. 워드 클라우드 이미지<br>
-    2. 일자별 키워드별 꺾은선 그래프
+
+    <!-- 한달 워드클라우드 -->
+    <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">
+        <img th:src="${monthlyList[monthlyList.size() - 1].wordCloud}" alt="한달 워드클라우드" />
+    </div>
+    <!-- 한달 꺽은선 차트 -->
+    <div id="monthly-chart-data" th:attr="data-json=${monthly}" style="display:none"></div>
+    <canvas id="monthlyChart" width="800" height="400"></canvas>
 </section>
 </html>

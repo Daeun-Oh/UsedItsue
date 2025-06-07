@@ -7,8 +7,8 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
-@Table("TREND")
-public class Trend extends BaseEntity {
+@Table("ETC_TREND")
+public class EtcTrend extends BaseEntity {
     @Id
     private Long seq;
     private String category;
