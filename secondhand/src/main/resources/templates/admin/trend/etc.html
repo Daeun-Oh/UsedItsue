@@ -60,7 +60,7 @@
     </div>
 
     <!-- 월간 영역 -->
-    <div id="monthlySection" style="display:none;">
+    <div id="monthlySection" style="display:block;">
         <h2>한달간의 누적 트렌드</h2>
         <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">
             <img th:src="${monthlyList[monthlyList.size() - 1].wordCloud}" alt="한달 워드클라우드" />
