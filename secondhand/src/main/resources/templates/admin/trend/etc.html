@@ -9,14 +9,13 @@
 </th:block>
 
 <section layout:fragment="content">
-    <h1>오늘의 트렌드</h1>
-
     <form name="frmSearch" method="get" th:object="${search}" autocomplete="off">
         사이트 주소 :
         <input type="text" name="siteUrl" th:field="*{siteUrl}" required>
         <div th:if="${#fields.hasErrors('siteUrl')}" th:errors="*{siteUrl}" style="color:red"></div>
         <button type="submit">조회하기</button>
     </form>
+    <h1>오늘의 트렌드</h1>
 
     <!-- 오늘 워드클라우드 -->
     <div th:if="${today != null}">
