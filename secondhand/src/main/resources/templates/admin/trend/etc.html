@@ -38,12 +38,24 @@
 
     <!-- 주간 영역 -->
     <div id="weeklySection" style="display:block;">
+<!--        <h2>일주일간의 누적 트렌드</h2>-->
+<!--        <div th:if="${weeklyList != null and #lists.size(weeklyList) > 0}">-->
+<!--            <img th:src="${weeklyList[weeklyList.size() - 1].wordCloud}" alt="일주일 워드클라우드" />-->
+<!--        </div>-->
+<!--        <div id="weekly-chart-data" th:attr="data-json=${weekly}" style="display:none"></div>-->
+<!--        <canvas id="weeklyChart" width="800" height="400"></canvas>-->
+
         <h2>일주일간의 누적 트렌드</h2>
-        <div th:if="${weeklyList != null and #lists.size(weeklyList) > 0}">
-            <img th:src="${weeklyList[weeklyList.size() - 1].wordCloud}" alt="일주일 워드클라우드" />
-        </div>
-        <div id="weekly-chart-data" th:attr="data-json=${weekly}" style="display:none"></div>
+
+        <!-- 일주일 워드클라우드 -->
+
+        <!-- 일주일 꺽은선 차트 -->
         <canvas id="weeklyChart" width="800" height="400"></canvas>
+
+
+        <script type="application/json" id="chart-data-weekly" th:utext="${items}"></script>
+
+
     </div>
 
     <!-- 월간 영역 -->
@@ -62,28 +74,18 @@
             document.getElementById("weeklySection").style.display = "block";
             document.getElementById("monthlySection").style.display = "none";
         }
-
-    <h2>일주일간의 누적 트렌드</h2>
-
-    <!-- 일주일 워드클라우드 -->
-
-    <!-- 일주일 꺽은선 차트 -->
-    <canvas id="weeklyChart" width="800" height="400"></canvas>
-
-    <script type="application/json" id="chart-data-weekly" th:utext="${items}"></script>
-
-
         function showMonthly() {
             document.getElementById("weeklySection").style.display = "none";
             document.getElementById("monthlySection").style.display = "block";
         }
-
 
         // 기본값은 주간 표시
         window.addEventListener('DOMContentLoaded', () => {
             showWeekly();
         });
     </script>
+
+
 
     <!-- 한달 워드클라우드 -->
 <!--    <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">-->
