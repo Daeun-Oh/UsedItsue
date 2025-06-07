@@ -1,7 +1,7 @@
 // DOM 로딩 완료 시 실행
 window.addEventListener("DOMContentLoaded", function () {
   /* 트렌드 통계 데이터 처리 S */
-    let rawData = document.getElementById("chart-data").innerHTML;
+    let rawData = document.getElementById("chart-data-weekly").innerHTML;
     rawData = JSON.parse(rawData);
 
     console.log("불러온 데이터:", rawData);
