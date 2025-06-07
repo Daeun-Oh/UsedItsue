@@ -1,7 +1,7 @@
 // DOM 로딩 완료 시 실행
 window.addEventListener("DOMContentLoaded", function () {
   /* 트렌드 통계 데이터 처리 S */
-    let rawData = document.getElementById("chart-data-weekly").innerHTML;
+    let rawData = document.getElementById("chart-data-monthly").innerHTML;
     rawData = JSON.parse(rawData);
 
     console.log("불러온 데이터:", rawData);
@@ -42,7 +42,7 @@ window.addEventListener("DOMContentLoaded", function () {
     /* 트렌드 통계 데이터 처리 E */
 
     // Chart.js 그래프 생성
-    const ctx = document.getElementById('weeklyChart').getContext('2d');
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
     const weeklyChart = new Chart(ctx, {
         type: 'line',
         data: {
