@@ -118,12 +118,9 @@ public class TrendController extends CommonController {
 
         String siteUrl = search.getSiteUrl();
 
-        //System.out.println(siteUrl);
+        System.out.println(siteUrl);
 
-        // 1. 입력한 사이트의 트렌드 정보 수집 및 저장
-        infoService.fetchAndSaveEtcTrend(siteUrl);
-
-        // 오늘 데이터 1개
+        // 오늘 데이터 1개 불러오기
         EtcTrend today = infoService.getTodayTrend(siteUrl);
 
         // 일주일간 누적

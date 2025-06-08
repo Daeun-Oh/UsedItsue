@@ -14,10 +14,8 @@ from time import strftime
 if len(sys.argv) < 3:
     sys.exit(1)
 
-
 # 워드 클라우드 이미지가 저장될 경로 체크 및 생성
 path = sys.argv[1] if sys.argv[1] else "c:/tmp"
-
 
 if not os.path.isdir(path):
     os.mkdir(path)
@@ -43,7 +41,7 @@ stat = Counter(words).most_common(50)
 
 # 워드 클라우드 이미지 생성
 image_file = strftime("%Y%m%d%H") + "_etc.jpg"
-wc = WordCloud(font_path='C:/trend/NanumGothic-ExtraBold.ttf', 
+wc = WordCloud(font_path='C:/Users/User/Desktop/UsedItsue/trend/fonts/NanumGothic-ExtraBold.ttf', 
                background_color='white', 
                max_font_size=100, 
                width=500, height=300)

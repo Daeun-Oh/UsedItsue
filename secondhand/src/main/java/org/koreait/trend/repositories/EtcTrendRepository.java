@@ -45,6 +45,6 @@ public interface EtcTrendRepository extends ListCrudRepository<EtcTrend, Long> {
      *
      * @return DISTINCT siteUrl 리스트
      */
-    @Query("SELECT DISTINCT e.siteUrl FROM EtcTrend e")
+    @Query("SELECT DISTINCT siteUrl FROM ETC_TREND")
     List<String> findDistinctSiteUrls();
 }
