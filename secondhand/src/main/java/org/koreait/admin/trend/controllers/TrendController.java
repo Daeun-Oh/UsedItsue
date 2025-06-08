@@ -1,13 +1,10 @@
 package org.koreait.admin.trend.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
-import org.koreait.global.search.CommonSearch;
-import org.koreait.trend.entities.EtcTrend;
 import org.koreait.trend.entities.Trend;
 import org.koreait.trend.services.TrendInfoService;
 import org.springframework.stereotype.Controller;
@@ -18,9 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,10 +65,13 @@ public class TrendController extends CommonController {
     @GetMapping("/etc")
     public String etc(@ModelAttribute TrendSearch search, Model model, BindingResult result) throws Exception {
         commonProcess("etc", model);
+/*
 
-        /**
+        */
+/**
          * 일주일 트렌드 데이터 불러오기
-         */
+         *//*
+
 
         CommonSearch commonSearch = new CommonSearch();
         commonSearch.setSDate(null);
@@ -79,7 +81,9 @@ public class TrendController extends CommonController {
 
         //System.out.println("items: " + items);
 
-        /* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 */
+        */
+/* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 *//*
+
 
         Map<String, Trend> trendMap = new LinkedHashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
@@ -91,7 +95,9 @@ public class TrendController extends CommonController {
 
         //System.out.println("items(map): " + trendMap);
 
-        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
+        */
+/* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) *//*
+
 
         // Jackson ObjectMapper 생성 및 설정
         ObjectMapper mapper = new ObjectMapper();
@@ -104,6 +110,7 @@ public class TrendController extends CommonController {
         System.out.println("items(json): " + itemsJson);
 
         model.addAttribute("items", itemsJson);
+*/
 
         /**
          * 사이트 url 입력 받고, 정보 수집 및 저장
@@ -123,33 +130,40 @@ public class TrendController extends CommonController {
         // 1. 입력한 사이트의 트렌드 정보 수집 및 저장
         infoService.fetchAndSaveEtcTrend(siteUrl);
 
-        // 오늘 데이터 1개
-        EtcTrend today = infoService.getTodayTrend(siteUrl);
+        // 날짜 범위 계산
+        LocalDate toDate = LocalDate.now();
 
-        // 일주일간 누적
-        List<EtcTrend> weekly = infoService.getTrendsInRange(siteUrl, 7);
+        LocalDateTime weeklyFrom = toDate.minusDays(6).atStartOfDay();
+        LocalDateTime weeklyTo = toDate.atTime(LocalTime.MAX);
 
-        // 한달간 누적
-        List<EtcTrend> monthly = infoService.getTrendsInRange(siteUrl, 30);
+        YearMonth yearMonth = YearMonth.now();
+        LocalDateTime monthlyFrom = yearMonth.atDay(1).atStartOfDay();
+        LocalDateTime monthlyTo = yearMonth.atEndOfMonth().atTime(LocalTime.MAX);
 
-        // 5. 모델에 결과 데이터 담기
+        // 병합 키워드 및 이미지 생성
         ObjectMapper om = new ObjectMapper();
-        om.registerModule(new JavaTimeModule()); // LocalDateTime 직렬화를 위해 필요
-        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 날짜를 문자열로
+        om.registerModule(new JavaTimeModule());
+        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        Map<String, Integer> mergedToday = infoService.getMergedTrendsForToday(siteUrl);
+        Map<String, Integer> mergedWeekly = infoService.getMergedTrends(siteUrl, weeklyFrom, weeklyTo);
+        Map<String, Integer> mergedMonthly = infoService.getMergedTrends(siteUrl, monthlyFrom, monthlyTo);
+
+        String mergedTodayJson = om.writeValueAsString(mergedToday);
+        String weeklyDailyJson = om.writeValueAsString(infoService.getDailyMergedKeywords(siteUrl, weeklyFrom, weeklyTo));
+        String monthlyDailyJson = om.writeValueAsString(infoService.getDailyMergedKeywords(siteUrl, monthlyFrom, monthlyTo));
+
+        String todayImagePath = infoService.generateWordCloudImage(mergedToday);
+        String weeklyImagePath = infoService.generateWordCloudImage(mergedWeekly);
+        String monthlyImagePath = infoService.generateWordCloudImage(mergedMonthly);
 
         model.addAttribute("search", search);
-        model.addAttribute("today", today);
-        model.addAttribute("weeklyList", weekly);
-        model.addAttribute("monthlyList", monthly);
-
-        try {
-            model.addAttribute("weekly", om.writeValueAsString(weekly));
-            model.addAttribute("monthly", om.writeValueAsString(monthly));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            model.addAttribute("weekly", "[]");
-            model.addAttribute("monthly", "[]");
-        }
+        model.addAttribute("today", mergedTodayJson);
+        model.addAttribute("todayImage", todayImagePath);
+        model.addAttribute("weekly", weeklyDailyJson);
+        model.addAttribute("weeklyImage", weeklyImagePath);
+        model.addAttribute("monthly", monthlyDailyJson);
+        model.addAttribute("monthlyImage", monthlyImagePath);
 
         return "admin/trend/etc";
     }
