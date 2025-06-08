@@ -15,14 +15,16 @@ public interface TrendRepository extends ListCrudRepository<Trend, Long> {
     Optional<Trend> getLatest(@Param("category") String category);
 
     @Query(value = """
-    SELECT * FROM TREND
+    SELECT * FROM ETC_TREND
     WHERE category = :category
+      AND siteUrl = :siteUrl
       AND DATE(createdAt) BETWEEN :sDate AND :eDate
     ORDER BY createdAt ASC
     """)
     List<Trend> getList(
             @Param("category") String category,
             @Param("sDate") LocalDate sDate,
-            @Param("eDate") LocalDate eDate
+            @Param("eDate") LocalDate eDate,
+            @Param("siteUrl") String siteUrl
     );
 }

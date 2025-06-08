@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
-* {
-    box-sizing: border-box;
-    outline: none;
-    font-family: "Nanum Gothic", sans-serif;
+{
+  box-sizing: border-box;
+  outline: none;
+  font-family: "Nanum Gothic", sans-serif;
 }
 
 html {
@@ -11,11 +11,11 @@ html {
 
 body {
     margin: 0;
-    color: #000;
+    color: #32494B;
 }
 
 a {
-    color: #000;
+    color: #32494B;
     text-decoration: none;
 }
 
@@ -47,7 +47,7 @@ main {
 
 main > aside {
     width: 200px;
-    background: #d5d5d5;
+    background: #96D294;
     min-height: 850px;
     margin-right: 15px;
 }
@@ -66,16 +66,16 @@ main > aside a {
     text-align: center;
     font-size: 1.5rem;
     font-weight: 700;
-    border-bottom: 1px solid #212121;
+    border-bottom: 1px solid #74af72;
 }
 
 main > aside a.on {
-    background: #212121;
-    color: #fff;
+    background: #fff;
+    color: #32494B;
 }
 
 main > .main-content > nav {
-    box-shadow: 2px 2px 10px #212121;
+    box-shadow: 2px 2px 10px #74af72;
     margin: 30px 0;
     display: flex;
     height: 50px;
@@ -90,7 +90,7 @@ main > .main-content > nav a {
 }
 
 main > .main-content > nav a.on {
-    background: #212121;
+    background: #74af72;
     color: #fff;
 }
 /* 메뉴 공통 E */

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EtcTrendRepository extends ListCrudRepository<EtcTrend, Long> {
+
     /**
      * 오늘 등록된 트렌드 중 최신 1건 조회
      *
@@ -45,6 +46,6 @@ public interface EtcTrendRepository extends ListCrudRepository<EtcTrend, Long> {
      *
      * @return DISTINCT siteUrl 리스트
      */
-    @Query("SELECT DISTINCT e.siteUrl FROM EtcTrend e")
+    @Query("SELECT DISTINCT siteUrl FROM ETC_TREND")
     List<String> findDistinctSiteUrls();
 }
