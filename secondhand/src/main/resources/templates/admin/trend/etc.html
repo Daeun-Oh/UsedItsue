@@ -34,7 +34,7 @@
         <div class="chart-wrap">
             <canvas id="dailyChart"></canvas>
         </div>
-        <script type="application/json" id="chart-data" th:utext="${today.keywords}"></script>
+        <div id="chart-data" th:attr="data-json=${today}"></div>
     </div>
 
     <!-- 주간 영역 -->
@@ -46,10 +46,10 @@
         </div>
 
         <!-- 일주일 꺽은선 차트 -->
-    <div class="chart-wrap">
+        <div class="chart-wrap">
             <canvas id="weeklyChart"></canvas>
         </div>
-        <script type="application/json" id="chart-data-weekly" th:utext="${items}"></script>
+        <script type="application/json" id="chart-data-weekly" th:utext="${weekly}"></script>
 
     </div>
 

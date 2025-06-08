@@ -68,53 +68,6 @@ public class TrendController extends CommonController {
     @GetMapping("/etc")
     public String etc(@ModelAttribute TrendSearch search, Errors errors, Model model, BindingResult result) throws Exception {
         commonProcess("etc", model);
-/*
-
-        */
-/**
-         * 일주일 트렌드 데이터 불러오기
-         *//*
-
-
-        CommonSearch commonSearch = new CommonSearch();
-        commonSearch.setSiteUrl(search.getSiteUrl());
-        commonSearch.setSDate(null);
-        commonSearch.setEDate(null);
-
-        List<Trend> items = infoService.getList("ETC", commonSearch);
-
-        //System.out.println("items: " + items);
-
-        */
-/* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 *//*
-
-
-        Map<String, Trend> trendMap = new LinkedHashMap<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
-
-        for (Trend trend : items) {
-            String dateKey = trend.getCreatedAt().format(formatter);
-            trendMap.put(dateKey, trend); // 날짜 중복이 없다는 전제
-        }
-
-        //System.out.println("items(map): " + trendMap);
-
-        */
-/* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) *//*
-
-
-        // Jackson ObjectMapper 생성 및 설정
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
-
-        // Map을 JSON 문자열로 변환
-        String itemsJson = mapper.writeValueAsString(trendMap);
-
-        System.out.println("items(json): " + itemsJson);
-
-        model.addAttribute("items", itemsJson);
-*/
 
         /**
          * 사이트 url 입력 받고, 정보 수집 및 저장
@@ -161,16 +114,15 @@ public class TrendController extends CommonController {
         String weeklyImagePath = infoService.generateWordCloudImage(mergedWeekly);
         String monthlyImagePath = infoService.generateWordCloudImage(mergedMonthly);
 
-
-        System.out.println("today: " + today);
+        System.out.println("mergedTodayJson:" + mergedTodayJson);
 
         model.addAttribute("search", search);
         model.addAttribute("today", mergedTodayJson);
-        model.addAttribute("todayImage", todayImagePath);
+        model.addAttribute("todayImagePath", todayImagePath);
         model.addAttribute("weekly", weeklyDailyJson);
-        model.addAttribute("weeklyImage", weeklyImagePath);
+        model.addAttribute("weeklyImagePath", weeklyImagePath);
         model.addAttribute("monthly", monthlyDailyJson);
-        model.addAttribute("monthlyImage", monthlyImagePath);
+        model.addAttribute("monthlyImagePath", monthlyImagePath);
 
         return "admin/trend/etc";
     }

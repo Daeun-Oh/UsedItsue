@@ -2,7 +2,7 @@ window.addEventListener("DOMContentLoaded", function() {
 
     /* 트렌드 통계 데이터 처리 S */
     const el = document.getElementById("chart-data");
-    if(!el) return;
+    //if(!el) return;
 
     let data = JSON.parse(el.dataset.json);
     console.log("불러온 데이터:", data);

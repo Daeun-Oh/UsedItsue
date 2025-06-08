@@ -2,7 +2,6 @@ package org.koreait.trend.validators;
 
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.validators.UrlValidator;
-import org.koreait.member.controllers.RequestJoin;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -26,14 +25,14 @@ public class DailyTrendValidator implements Validator, UrlValidator {
         /**
          * 이메일 형식
          */
-        RequestJoin form = (RequestJoin) target;
-        String password = form.getPassword();
-        String confirmPassword = form.getConfirmPassword();
-        String mobile = form.getMobile();
-
-        // 1. 이메일 중복 여부
-        if (repository.existsByEmail(form.getEmail())) {
-            errors.rejectValue("email", "Duplicated");
-        }
+//        RequestJoin form = (RequestJoin) target;
+//        String password = form.getPassword();
+//        String confirmPassword = form.getConfirmPassword();
+//        String mobile = form.getMobile();
+//
+//        // 1. 이메일 중복 여부
+//        if (repository.existsByEmail(form.getEmail())) {
+//            errors.rejectValue("email", "Duplicated");
+//        }
     }
 }
