@@ -18,7 +18,7 @@ def main():
 
     # 워드클라우드 설정
     wc = WordCloud(
-        font_path="C:/trend/NanumGothic-ExtraBold.ttf", 
+        font_path="C:/Users/User/Desktop/UsedItsue/trend/fonts/NanumGothic-ExtraBold.ttf", 
         width=400,
         height=400,
         background_color='white'
