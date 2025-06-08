@@ -50,3 +50,15 @@ img {
     display:absolute;
     right:0;
 }
+
+.image-wrapper {
+    width: 1150px;
+    position: relative;
+}
+
+.image-wrapper img {
+    width: 300px;
+    position: absolute;
+    right: 0;
+    top: 20px;
+}
