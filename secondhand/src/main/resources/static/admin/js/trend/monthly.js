@@ -2,6 +2,8 @@
 window.addEventListener("DOMContentLoaded", function () {
   /* 트렌드 통계 데이터 처리 S */
     let rawData = document.getElementById("chart-data-monthly").innerHTML;
+    if(!rawData) return;
+
     rawData = JSON.parse(rawData);
 
     console.log("불러온 데이터:", rawData);
