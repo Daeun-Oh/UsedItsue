@@ -25,7 +25,7 @@
     </div>
 
     <!-- 오늘 워드클라우드 -->
-    <div th:if="${todayImagePath != null}">
+    <div th:if="${todayImagePath != null}" class="image-wrapper">
         <img th:src="${todayImagePath}" alt="오늘의 워드클라우드" />
     </div>
 
@@ -41,7 +41,7 @@
     <div id="weeklySection" style="display:block;">
         <h2>일주일간의 누적 트렌드</h2>
         <!-- 일주일 워드클라우드 -->
-        <div th:if="${monthlyImagePath != null }">
+        <div th:if="${monthlyImagePath != null }" class="image-wrapper">
             <img th:src="${monthlyImagePath}" alt="일주일 워드클라우드" />
         </div>
 
@@ -56,7 +56,7 @@
     <!-- 월간 영역 -->
     <div id="monthlySection" style="display:block;">
         <h2>한달간의 누적 트렌드</h2>
-        <div th:if="${monthlyImagePath != null }">
+        <div th:if="${monthlyImagePath != null }" class="image-wrapper">
             <img th:src="${monthlyImagePath}" alt="한달 워드클라우드" />
         </div>
 
