@@ -27,7 +27,7 @@ def main():
     wc.generate_from_frequencies(keywords)
 
     # 파일명 생성
-    filename = f"{uuid.uuid4().hex}.png"
+    filename = f"{uuid.uuid4().hex}_merged.jpg"
     output_path = os.path.join(output_dir, filename)
 
     # 이미지 저장
