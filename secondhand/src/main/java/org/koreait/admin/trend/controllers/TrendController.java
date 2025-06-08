@@ -106,13 +106,13 @@ public class TrendController extends CommonController {
         Map<String, Integer> mergedWeekly = infoService.getMergedTrends(siteUrl, weeklyFrom, weeklyTo);
         Map<String, Integer> mergedMonthly = infoService.getMergedTrends(siteUrl, monthlyFrom, monthlyTo);
 
-        String mergedTodayJson = om.writeValueAsString(mergedToday);
-        String weeklyDailyJson = om.writeValueAsString(infoService.getDailyMergedKeywords(siteUrl, weeklyFrom, weeklyTo));
-        String monthlyDailyJson = om.writeValueAsString(infoService.getDailyMergedKeywords(siteUrl, monthlyFrom, monthlyTo));
-
         String todayImagePath = infoService.generateWordCloudImage(mergedToday);
         String weeklyImagePath = infoService.generateWordCloudImage(mergedWeekly);
         String monthlyImagePath = infoService.generateWordCloudImage(mergedMonthly);
+
+        String mergedTodayJson = om.writeValueAsString(mergedToday);
+        String weeklyDailyJson = om.writeValueAsString(infoService.getDailyKeywords(siteUrl, weeklyFrom, weeklyTo));
+        String monthlyDailyJson = om.writeValueAsString(infoService.getDailyKeywords(siteUrl, monthlyFrom, monthlyTo));
 
         System.out.println("mergedTodayJson:" + mergedTodayJson);
 

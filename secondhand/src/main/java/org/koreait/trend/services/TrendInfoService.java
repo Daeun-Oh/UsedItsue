@@ -2,6 +2,8 @@ package org.koreait.trend.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.configs.FileProperties;
@@ -279,49 +281,36 @@ public class TrendInfoService {
 
     public Map<String, EtcTrend> getDailyKeywords(String siteUrl, LocalDateTime from, LocalDateTime to) throws JsonProcessingException {
 
-        /**
-         * 일주일 트렌드 데이터 불러오기
-         */
+        List<EtcTrend> items = etcTrendRepository.findBySiteUrlAndCreatedAtBetween(siteUrl, from, to);
+
+        /* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 */
 
 
-//        CommonSearch commonSearch = new CommonSearch();
-//        commonSearch.setSiteUrl(siteUrl);
-//        commonSearch.setSDate(null);
-//        commonSearch.setEDate(null);
-//
-//        //System.out.println("items: " + items);
-//
-//
-//        /* 데이터를 {날짜=Trend, 날짜=Trend, ...} 형태로 변환 */
-//
-//
-//        Map<String, Trend> trendMap = new LinkedHashMap<>();
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
-//
-//        for (Trend trend : items) {
-//            String dateKey = trend.getCreatedAt().format(formatter);
-//            trendMap.put(dateKey, trend); // 날짜 중복이 없다는 전제
-//        }
-//
-//        //System.out.println("items(map): " + trendMap);
-//
-//
-//        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
-//
-//
-//        // Jackson ObjectMapper 생성 및 설정
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
-//        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
-//
-//        // Map을 JSON 문자열로 변환
-//        String itemsJson = mapper.writeValueAsString(trendMap);
-//
-//        System.out.println("items(json): " + itemsJson);
-//
-//        model.addAttribute("items", itemsJson);
+        Map<String, EtcTrend> trendMap = new LinkedHashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 날짜 형식 지정
 
-        return null;
+        for (EtcTrend trend : items) {
+            String dateKey = trend.getCreatedAt().format(formatter);
+            trendMap.put(dateKey, trend); // 날짜 중복이 없다는 전제
+        }
+
+        //System.out.println("items(map): " + trendMap);
+
+
+        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
+
+
+        // Jackson ObjectMapper 생성 및 설정
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
+
+        // Map을 JSON 문자열로 변환
+        String itemsJson = mapper.writeValueAsString(trendMap);
+
+        System.out.println("items(json): " + itemsJson);
+
+        return trendMap;
     }
 
     /**
