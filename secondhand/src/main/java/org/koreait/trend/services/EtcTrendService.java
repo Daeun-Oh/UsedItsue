@@ -9,7 +9,6 @@ import org.koreait.trend.entities.EtcTrend;
 import org.koreait.trend.entities.NewsTrend;
 import org.koreait.trend.repositories.EtcTrendRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
  * - 사용자가 입력한 사이트 URL로 트렌드 분석 결과를 수집
  * - Python 스크립트를 실행하고, 결과를 파싱하여 DB에 저장
  */
-@Lazy
+//@Lazy
 @Service
 @RequiredArgsConstructor
 @EnableConfigurationProperties({PythonProperties.class, FileProperties.class})
@@ -50,36 +49,67 @@ public class EtcTrendService {
      * 4. EtcTrend 엔티티로 변환 후 DB 저장
      */
     public void fetchAndSave(String siteUrl) {
-        // 현재 profile이 prod인지 여부 판단
-        boolean isProd = Arrays.stream(ctx.getEnvironment().getActiveProfiles()).anyMatch(p -> p.equals("prod"));
-        String pythonPath = isProd ? properties.getBase() + "/python" : properties.getBase() + "/python.exe";
+        boolean isProduction = Arrays.stream(ctx.getEnvironment().getActiveProfiles()).anyMatch(s -> s.equals("prod"));
+
+        String activationCommand = null, pythonPath = null;
+        if (isProduction) { // 리눅스 환경, 서비스 환경
+            activationCommand = String.format("source %s/activate", properties.getBase());
+            pythonPath = properties.getBase() + "/python";
+        } else { // 윈도우즈 환경
+            activationCommand = String.format("%s/activate.bat", properties.getBase());
+            pythonPath = properties.getBase() + "/python.exe";
+        }
 
         try {
-            // Python 실행을 위한 프로세스 빌드
-            ProcessBuilder builder = new ProcessBuilder(
-                    pythonPath,
-                    properties.getTrend() + "/etc_trend.py",
-                    fileProperties.getPath() + "/trend",
-                    siteUrl
-            );
-            // 실행 및 결과 처리
+            ProcessBuilder builder = new ProcessBuilder(activationCommand); // 가상환경 활성화
             Process process = builder.start();
-            if (process.waitFor() == 0) {
-                String json = process.inputReader().lines().collect(Collectors.joining());
-                NewsTrend result = om.readValue(json, NewsTrend.class);
+            if (process.waitFor() == 0) { // 정상 수행된 경우
+                builder = new ProcessBuilder(pythonPath, properties.getTrend() + "/etc_trend.py", fileProperties.getPath() + "/trend", siteUrl);
+                //System.out.println(fileProperties.getPath() + "/trend");
+                process = builder.start();
+                int statusCode = process.waitFor();
+                if (statusCode == 0) {
+                    String json = process.inputReader().lines().collect(Collectors.joining());
+                    NewsTrend result = om.readValue(json, NewsTrend.class);
 
-                // DB 저장용 엔티티 구성
-                EtcTrend trend = new EtcTrend();
-                trend.setCategory("ETC");
-                trend.setSiteUrl(siteUrl);
-                trend.setWordCloud(request.getContextPath() + fileProperties.getUrl() + "/trend/" + result.getImage());
-                trend.setKeywords(om.writeValueAsString(result.getKeywords()));
+                    // DB 저장용 엔티티 구성
+                    EtcTrend trend = new EtcTrend();
+                    trend.setCategory("ETC");
+                    trend.setSiteUrl(siteUrl);
+                    trend.setWordCloud(fileProperties.getUrl() + "/trend/" + result.getImage());
+                    trend.setKeywords(om.writeValueAsString(result.getKeywords()));
 
-                System.out.println(trend);
+                    //System.out.println(trend);
 
-                // 저장
-                etcTrendRepository.save(trend);
+                    // 저장
+                    etcTrendRepository.save(trend);
+
+//                    String json = process.inputReader().lines().collect(Collectors.joining());
+//                    return om.readValue(json, EtcTrend.class);
+
+                } else {
+                    System.out.println("statusCode:" + statusCode);
+                    process.errorReader().lines().forEach(System.out::println);
+                }
             }
+//            ProcessBuilder builder = new ProcessBuilder(activationCommand); // 가상환경 활성화
+//            Process process = builder.start();
+//            if (process.waitFor() == 0) {
+//                String json = process.inputReader().lines().collect(Collectors.joining());
+//                NewsTrend result = om.readValue(json, NewsTrend.class);
+//
+//                // DB 저장용 엔티티 구성
+//                EtcTrend trend = new EtcTrend();
+//                trend.setCategory("ETC");
+//                trend.setSiteUrl(siteUrl);
+//                trend.setWordCloud(request.getContextPath() + fileProperties.getUrl() + "/trend/" + result.getImage());
+//                trend.setKeywords(om.writeValueAsString(result.getKeywords()));
+//
+//                System.out.println(trend);
+//
+//                // 저장
+//                etcTrendRepository.save(trend);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,10 +122,12 @@ public class EtcTrendService {
      * - DB에 등록된 사이트 목록을 순회하면서 트렌드 데이터 수집
      */
     @Scheduled(fixedRate = 1L, timeUnit = TimeUnit.HOURS)
+//    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)
     public void scheduledEtcJob() {
         List<String> siteUrls = etcTrendRepository.findDistinctSiteUrls();
         for (String siteUrl : siteUrls) {
             fetchAndSave(siteUrl);
         }
+        System.out.println("** data is saved **");
     }
 }

@@ -7,10 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.trend.entities.Trend;
 import org.koreait.trend.services.TrendInfoService;
+import org.koreait.trend.validators.DailyTrendValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +32,7 @@ import java.util.Map;
 public class TrendController extends CommonController {
 
     private final TrendInfoService infoService;
+    private final DailyTrendValidator validator;
 
     /**
      * 공통 모델 속성 설정 - 메인 코드 "trend"
@@ -63,7 +66,7 @@ public class TrendController extends CommonController {
      * URL: /admin/trend/etc
      */
     @GetMapping("/etc")
-    public String etc(@ModelAttribute TrendSearch search, Model model, BindingResult result) throws Exception {
+    public String etc(@ModelAttribute TrendSearch search, Errors errors, Model model, BindingResult result) throws Exception {
         commonProcess("etc", model);
 /*
 
@@ -74,10 +77,11 @@ public class TrendController extends CommonController {
 
 
         CommonSearch commonSearch = new CommonSearch();
+        commonSearch.setSiteUrl(search.getSiteUrl());
         commonSearch.setSDate(null);
         commonSearch.setEDate(null);
 
-        List<Trend> items = infoService.getList("NEWS", commonSearch);
+        List<Trend> items = infoService.getList("ETC", commonSearch);
 
         //System.out.println("items: " + items);
 
@@ -125,7 +129,7 @@ public class TrendController extends CommonController {
 
         String siteUrl = search.getSiteUrl();
 
-        //System.out.println(siteUrl);
+        System.out.println(siteUrl);
 
         // 1. 입력한 사이트의 트렌드 정보 수집 및 저장
         infoService.fetchAndSaveEtcTrend(siteUrl);
@@ -156,6 +160,9 @@ public class TrendController extends CommonController {
         String todayImagePath = infoService.generateWordCloudImage(mergedToday);
         String weeklyImagePath = infoService.generateWordCloudImage(mergedWeekly);
         String monthlyImagePath = infoService.generateWordCloudImage(mergedMonthly);
+
+
+        System.out.println("today: " + today);
 
         model.addAttribute("search", search);
         model.addAttribute("today", mergedTodayJson);
