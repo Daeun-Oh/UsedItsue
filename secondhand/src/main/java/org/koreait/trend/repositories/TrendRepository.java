@@ -15,7 +15,7 @@ public interface TrendRepository extends ListCrudRepository<Trend, Long> {
     Optional<Trend> getLatest(@Param("category") String category);
 
     @Query(value = """
-    SELECT * FROM TREND
+    SELECT * FROM ETC_TREND
     WHERE category = :category
       AND DATE(createdAt) BETWEEN :sDate AND :eDate
     ORDER BY createdAt ASC

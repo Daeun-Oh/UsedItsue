@@ -70,7 +70,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 },
                 title: {
                     display: true,
-                    text: '주간 키워드 빈도수'
+                    text: '월간 키워드 빈도수'
                 },
                 tooltip: {
                     enabled: true,

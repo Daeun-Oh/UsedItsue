@@ -137,6 +137,9 @@ public class TrendController extends CommonController {
         om.registerModule(new JavaTimeModule()); // LocalDateTime 직렬화를 위해 필요
         om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // 날짜를 문자열로
 
+
+        System.out.println("today: " + today);
+
         model.addAttribute("search", search);
         model.addAttribute("today", today);
         model.addAttribute("weeklyList", weekly);

@@ -5,7 +5,6 @@
 
 <th:block layout:fragment="addCommonScript">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:src="@{/js/trend/etc.js}"></script>
 </th:block>
 
 <section layout:fragment="content">
@@ -32,8 +31,10 @@
 
     <!-- 오늘 파이 차트 -->
     <div th:if="${today != null}">
-        <div id="chart-data" th:attr="data-json=${today.keywords}" style="display:block;"></div>
-        <canvas id="dailyChart" width="400" height="400"></canvas>
+        <div class="chart-wrap">
+            <canvas id="dailyChart"></canvas>
+        </div>
+        <script type="application/json" id="chart-data" th:utext="${today.keywords}"></script>
     </div>
 
 
@@ -48,9 +49,9 @@
         <!-- 일주일 워드클라우드 -->
 
         <!-- 일주일 꺽은선 차트 -->
-        <canvas id="weeklyChart" width="800" height="400"></canvas>
-
-
+        <div class="chart-wrap">
+            <canvas id="weeklyChart"></canvas>
+        </div>
         <script type="application/json" id="chart-data-weekly" th:utext="${items}"></script>
 
 
