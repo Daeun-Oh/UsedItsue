@@ -26,7 +26,7 @@ html = requests.get(url).text
 soup = bs(html, 'html.parser')
 body = soup.select_one("body")
 text = body.get_text().strip().replace("\n", " ")
-stopwords = ['본문', '바로가기', 'NAVER', '검색', '이슈', '닫기', '구독'] # 불용어
+stopwords = ['본문', '바로가기', 'NAVER', '검색', '이슈', '닫기', '구독', '보기', '더', '뉴스', '기사', '하는', '것', '등', '이', '가'] # 불용어
 
 
 # 명사, 형용사, 동사의 단어로 형태소 분리

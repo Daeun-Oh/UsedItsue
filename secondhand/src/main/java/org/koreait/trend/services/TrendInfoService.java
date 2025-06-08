@@ -64,6 +64,7 @@ public class TrendInfoService {
      * @return
      */
     public List<Trend> getList(String category, CommonSearch search) {
+        String siteUrl = search.getSiteUrl();
         LocalDate sDate = search.getSDate();
         LocalDate eDate = search.getEDate();
 
@@ -72,7 +73,7 @@ public class TrendInfoService {
         if (eDate == null) eDate = LocalDate.now();
 
         //System.out.println("sDate:" + sDate + " eDate:" + eDate);
-        List<Trend> items = repository.getList(category, sDate, eDate);
+        List<Trend> items = repository.getList(category, sDate, eDate, siteUrl);
 
         return items;
     }

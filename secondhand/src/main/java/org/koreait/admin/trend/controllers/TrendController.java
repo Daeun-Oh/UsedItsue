@@ -72,10 +72,11 @@ public class TrendController extends CommonController {
          */
 
         CommonSearch commonSearch = new CommonSearch();
+        commonSearch.setSiteUrl(search.getSiteUrl());
         commonSearch.setSDate(null);
         commonSearch.setEDate(null);
 
-        List<Trend> items = infoService.getList("NEWS", commonSearch);
+        List<Trend> items = infoService.getList("ETC", commonSearch);
 
         //System.out.println("items: " + items);
 
