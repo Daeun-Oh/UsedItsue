@@ -7,23 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface EtcTrendRepository extends ListCrudRepository<EtcTrend, Long> {
-    /**
-     * 오늘 등록된 트렌드 중 최신 1건 조회
-     *
-     * @param siteUrl 조회할 사이트 URL
-     * @param from 시작 시간 (보통 오늘 00:00)
-     * @param to 종료 시간 (보통 오늘 23:59)
-     * @return 최신 1건의 트렌드 데이터 (없으면 Optional.empty())
-     */
-    @Query("SELECT * FROM ETC_TREND WHERE siteUrl = :siteUrl AND createdAt BETWEEN :from AND :to ORDER BY createdAt DESC LIMIT 1")
-    Optional<EtcTrend> findFirstBySiteUrlAndCreatedAtBetween(
-            @Param("siteUrl") String siteUrl,
-            @Param("from") LocalDateTime from,
-            @Param("to") LocalDateTime to
-    );
 
     /**
      * 지정 기간 동안의 트렌드 데이터 전체 조회

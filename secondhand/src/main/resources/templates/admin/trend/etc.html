@@ -25,8 +25,8 @@
     </div>
 
     <!-- 오늘 워드클라우드 -->
-    <div th:if="${today != null}">
-        <img th:src="${today.wordCloud}" alt="오늘의 워드클라우드" />
+    <div th:if="${todayImagePath != null}">
+        <img th:src="${todayImagePath}" alt="오늘의 워드클라우드" />
     </div>
 
     <!-- 오늘 파이 차트 -->
@@ -37,35 +37,31 @@
         <script type="application/json" id="chart-data" th:utext="${today.keywords}"></script>
     </div>
 
-
     <!-- 주간 영역 -->
     <div id="weeklySection" style="display:block;">
         <h2>일주일간의 누적 트렌드</h2>
-        <div th:if="${weeklyList != null and #lists.size(weeklyList) > 0}">
-            <img th:src="${weeklyList[weeklyList.size() - 1].wordCloud}" alt="일주일 워드클라우드" />
-        </div>
-        <div id="weekly-chart-data" th:attr="data-json=${weekly}" style="display:block"></div>
-
         <!-- 일주일 워드클라우드 -->
+        <div th:if="${monthlyImagePath != null }">
+            <img th:src="${monthlyImagePath}" alt="일주일 워드클라우드" />
+        </div>
 
         <!-- 일주일 꺽은선 차트 -->
-        <div class="chart-wrap">
+    <div class="chart-wrap">
             <canvas id="weeklyChart"></canvas>
         </div>
         <script type="application/json" id="chart-data-weekly" th:utext="${items}"></script>
-
 
     </div>
 
     <!-- 월간 영역 -->
     <div id="monthlySection" style="display:block;">
         <h2>한달간의 누적 트렌드</h2>
-        <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">
-            <img th:src="${monthlyList[monthlyList.size() - 1].wordCloud}" alt="한달 워드클라우드" />
+        <div th:if="${monthlyImagePath != null }">
+            <img th:src="${monthlyImagePath}" alt="한달 워드클라우드" />
         </div>
-        <div id="monthly-chart-data" th:attr="data-json=${monthly}" style="display:block"></div>
+
         <canvas id="monthlyChart" width="800" height="400"></canvas>
-        <script type="application/json" id="chart-data-monthly" th:utext="${items}"></script>
+        <script type="application/json" id="chart-data-monthly" th:utext="${monthly}"></script>
     </div>
 
     <!-- 탭 전환 스크립트 -->
@@ -88,11 +84,11 @@
 
 
     <!-- 한달 워드클라우드 -->
-<!--    <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">-->
-<!---        <img th:src="${monthlyList[monthlyList.size() - 1].wordCloud}" alt="한달 워드클라우드" />-->
-<!--    </div>-->
+    <!--    <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">-->
+    <!---        <img th:src="${monthlyList[monthlyList.size() - 1].wordCloud}" alt="한달 워드클라우드" />-->
+    <!--    </div>-->
     <!-- 한달 꺽은선 차트 -->
-<!--    <div id="monthly-chart-data" th:attr="data-json=${monthly}" style="display:none"></div>-->
-<!--    <canvas id="monthlyChart" width="800" height="400"></canvas>-->
+    <!--    <div id="monthly-chart-data" th:attr="data-json=${monthly}" style="display:none"></div>-->
+    <!--    <canvas id="monthlyChart" width="800" height="400"></canvas>-->
 </section>
 </html>
