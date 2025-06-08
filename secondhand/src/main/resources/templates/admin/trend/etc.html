@@ -66,8 +66,8 @@
     <div id="monthlySection" style="display:block;">
         <h2>한달간의 누적 트렌드</h2>
         <!-- 한달 워드클라우드 -->
-        <div th:if="${weeklyList != null and #lists.size(monthlyList) > 0}">
-            <div th:each="item, stat : ${weeklyList}">
+        <div th:if="${monthlyList != null and #lists.size(monthlyList) > 0}">
+            <div th:each="item, stat : ${monthlyList}">
                 <div th:if="${stat.index < 30}">
                     <p th:text="${#temporals.format(T(java.time.LocalDate).now().minusDays(29 - stat.index), 'yyyy-MM-dd')}"></p>
                     <img th:src="${item.wordCloud}" alt="워드클라우드"/>
