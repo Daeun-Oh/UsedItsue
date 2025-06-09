@@ -11,12 +11,10 @@ import org.koreait.trend.entities.Trend;
 import org.koreait.trend.repositories.TrendRepository;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Lazy
@@ -74,10 +72,10 @@ public class NewsTrendService {
      * 매 1시간 마다 주기적으로 뉴스 트렌드 데이터를 저장
      *
      */
-    @Scheduled(fixedRate = 1L, timeUnit = TimeUnit.HOURS)
+    //@Scheduled(fixedRate = 1L, timeUnit = TimeUnit.HOURS)
     public void scheduledJob() {
-       NewsTrend item = process();
-       if (item == null) return;
+        NewsTrend item = process();
+        if (item == null) return;
         String wordCloud = String.format("%s%s/trend/%s", request.getContextPath(), fileProperties.getUrl(), item.getImage());
 
         try {

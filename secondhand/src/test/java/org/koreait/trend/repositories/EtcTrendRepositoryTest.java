@@ -1,12 +1,12 @@
 package org.koreait.trend.repositories;
 
 import org.junit.jupiter.api.Test;
+import org.koreait.global.search.CommonSearch;
 import org.koreait.trend.entities.EtcTrend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -21,34 +21,28 @@ public class EtcTrendRepositoryTest {
     void test01() {  //일주일
         String siteUrl = "https://news.naver.com/section/103";
 
-        LocalDate weeklyToday = LocalDate.now();
-        LocalDate weekAgo = weeklyToday.minusDays(6);
+        CommonSearch search = new CommonSearch();
+        search.setSiteUrl(siteUrl);
+        search.setSDate(LocalDate.now().minusDays(6));
+        search.setEDate(LocalDate.now());
 
-        LocalDateTime weeklyFrom = weekAgo.atStartOfDay();              // 7일 전 00:00
-        LocalDateTime weeklyTo = weeklyToday.atTime(LocalTime.MAX);     // 오늘 23:59
+        List<EtcTrend> trends = etcTrendRepository.getKeywordsBetween(search.getSiteUrl(), search.getSDate().atStartOfDay(), search.getEDate().atTime(LocalTime.MAX));
 
-        List<EtcTrend> trends = etcTrendRepository.findBySiteUrlAndCreatedAtBetween(siteUrl, weeklyFrom, weeklyTo);
-
-        System.out.println("========================"+ weeklyToday +", "+ weeklyFrom +", "+ weeklyTo + "==================");
+        System.out.println("========================"+ search.getSiteUrl() +", "+ search.getSDate() +", "+ search.getEDate() + "==================");
         System.out.println(trends);
-
     }
 
     @Test
     void test02() {  //이번달
         String siteUrl = "https://news.naver.com/section/103";
 
-        YearMonth yearMonth = YearMonth.now();
+        CommonSearch search = new CommonSearch();
+        search.setSiteUrl(siteUrl);
+        search.setSDate(YearMonth.now().atDay(1));
 
-        LocalDate fromDate = yearMonth.atDay(1); // 1일
-        LocalDate toDate = yearMonth.atEndOfMonth(); // 말일
+        List<EtcTrend> trends = etcTrendRepository.getKeywordsBetween(search.getSiteUrl(), search.getSDate().atStartOfDay(), search.getEDate().atTime(LocalTime.MAX));
 
-        LocalDateTime monthlyFrom = fromDate.atStartOfDay();            // 00:00:00
-        LocalDateTime monthlyTo = toDate.atTime(LocalTime.MAX);         // 23:59:59.999...
-
-        List<EtcTrend> trends = etcTrendRepository.findBySiteUrlAndCreatedAtBetween(siteUrl, monthlyFrom, monthlyTo);
-        System.out.println("========================"+ yearMonth +", "+ monthlyFrom +", "+ monthlyTo + "==================");
+        System.out.println("========================"+ search.getSiteUrl() +", "+ search.getSDate() +", "+ search.getEDate() + "==================");
         System.out.println(trends);
-
     }
 }
