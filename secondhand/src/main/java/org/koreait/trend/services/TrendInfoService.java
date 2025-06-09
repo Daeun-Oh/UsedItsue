@@ -297,16 +297,12 @@ public class TrendInfoService {
         //System.out.println("items(map): " + trendMap);
 
 
-        /* Map 데이터를 json 문자열로 변환 (etc.js에서 활용) */
-
-
-        // Jackson ObjectMapper 생성 및 설정
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
+        /* Map 데이터를 json 문자열로 변환 */
+        om.registerModule(new JavaTimeModule()); // LocalDateTime 등 자바 8 날짜 지원
+        om.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // ISO-8601 형식 날짜 출력
 
         // Map을 JSON 문자열로 변환
-        String itemsJson = mapper.writeValueAsString(trendMap);
+        String itemsJson = om.writeValueAsString(trendMap);
 
         System.out.println("items(json): " + itemsJson);
 
