@@ -65,7 +65,7 @@
         </div>
 
         <!-- 일주일 꺽은선 차트 -->
-        <div class="chart-wrap">
+        <div class="chart-wrap-line">
             <canvas id="weeklyChart"></canvas>
         </div>
         <script type="application/json" id="chart-data-weekly" th:utext="${weekly}"></script>
@@ -96,7 +96,7 @@
             <img th:src="${monthlyImagePath}" alt="한달 워드클라우드" />
         </div>
 
-        <div class="chart-wrap">
+        <div class="chart-wrap-line">
             <canvas id="monthlyChart"></canvas>
         </div>
         <script type="application/json" id="chart-data-monthly" th:utext="${monthly}"></script>
