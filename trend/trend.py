@@ -20,7 +20,7 @@ if os.path.isdir(path) == False:
     os.mkdir(path)
 
 # 원격 컨텐츠 로드 (입력 받는 걸로 수정해야 함) **
-url = sys.argv[2] if sys.argv[2] else "https://news.naver.com"  # sys.argv[2] - 형식에 맞지 않으면 예외 처리
+url = sys.argv[2] if len(sys.argv) == 3 and sys.argv[2] else "https://news.naver.com/"  # sys.argv[2] - 형식에 맞지 않으면 예외 처리
 html = requests.get(url).text
 soup = bs(html, 'html.parser')
 body = soup.select_one("body")
