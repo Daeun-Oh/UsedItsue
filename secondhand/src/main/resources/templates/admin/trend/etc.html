@@ -11,7 +11,7 @@
     <h1>오늘의 트렌드</h1>
 
     <!-- 검색 폼 -->
-    <form name="frmSearch" method="get" th:object="${search}" autocomplete="off" class="frmSearch">
+        <form name="frmSearch" method="get" th:object="${search}" autocomplete="off" class="frmSearch">
         사이트 주소 :
         <input type="text" name="siteUrl" th:field="*{siteUrl}" required>
         <div th:if="${#fields.hasErrors('siteUrl')}" th:errors="*{siteUrl}" style="color:red"></div>
