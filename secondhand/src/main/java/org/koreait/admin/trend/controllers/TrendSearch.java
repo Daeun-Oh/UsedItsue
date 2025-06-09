@@ -9,6 +9,6 @@ import org.springframework.data.relational.core.mapping.Table;
 @Table("ECT_TREND")
 public class TrendSearch {
     @Column("siteUrl")
-    @NotBlank(message = "사이트 주소는 필수입니다.")
+    @NotBlank
     private String siteUrl;
 }
