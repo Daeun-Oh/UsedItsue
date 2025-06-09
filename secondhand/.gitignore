@@ -26,6 +26,7 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 **/trend/basic/lib/**
+**/trend/uploads/trend/*.jpg
 
 ### NetBeans ###
 /nbproject/private/
