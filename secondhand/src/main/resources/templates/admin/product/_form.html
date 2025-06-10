@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="common" th:object="${requestProduct}">
+    <div class="error global" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+    <table class="table-cols" > <!---->
+        <tr>
+            <th width="120">상품명</th>
+            <td>
+                <input type="text" name="name" th:field="*{name}">
+                <div class="error" th:each="err : ${#fields.errors('name')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th width="120">상품분류</th>
+            <td>
+                <input type="text" name="category" th:field="*{category}">
+                <div class="error" th:each="err : ${#fields.errors('category')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th width="120">상품상태</th>
+            <td>
+                <span th:each="status : ${statusList}">
+                    <input type="radio" name="status" th:id="${'status-' + status.name()}" th:value="${status.name()}" th:field="*{status}">
+                    <label th:for="${'status-' + status.name()}" th:text="${#messages.msg('productStatus.' + status.name())}"></label>
+                </span>
+            </td>
+        </tr>
+        <tr>
+            <th width="120">소비자가격</th>
+            <td>
+                <input type="number" name="consumerPrice" th:field="*{consumerPrice}">
+                <div class="error" th:each="err : ${#fields.errors('consumerPrice')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th width="120">판매가격</th>
+            <td>
+                <input type="number" name="salePrice" th:field="*{salePrice}">
+                <div class="error" th:each="err : ${#fields.errors('salePrice')}" th:text="${err}"></div>
+            </td>
+        </tr>
+        <tr>
+            <th width="120">상품설명</th>
+            <td>
+                <textarea id="description" name="description" th:field="*{description}"></textarea>
+                <div class="error" th:each="err : ${#fields.errors('salePrice')}" th:text="${err}"></div>
+            </td>
+        </tr>
+    </table>
+</th:block>
+</html>

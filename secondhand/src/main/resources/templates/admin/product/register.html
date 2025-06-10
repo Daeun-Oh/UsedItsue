@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+
+<section layout:fragment="content">
+    <h1 th:text="${pageTitle}"></h1>
+    <form name="frmSave" method="POST" th:action="@{/admin/product/save}"
+          th:object="${requestProduct}" autocomplete="off">
+
+        <!-- 상품 추가할 때는 gid 필요 -->
+        <input type="hidden" name="mode" value="add">
+        <input type="hidden" name="gid" th:field="*{gid}">
+
+        <!-- 이 부분을 _form의 common 블록으로 치환 -->
+        <th:block th:replace="~{admin/product/_form::common}"></th:block>
+
+        <div class="button-group">
+            <button type="reset" class="btn">다시입력</button>
+            <button type="submit" class="btn black">등록하기</button>
+        </div>
+    </form>
+</section>
+</html>

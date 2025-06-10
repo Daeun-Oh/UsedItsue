@@ -7,6 +7,10 @@ import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 
+/**
+ * 모든 Entity(Table)에 있는
+ * 생성 날짜, 수정 날짜, 삭제 날짜 컬럼
+ */
 @Data
 public abstract class BaseEntity {
     @CreatedDate

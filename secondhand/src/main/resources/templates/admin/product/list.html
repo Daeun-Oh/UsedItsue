@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layouts/main}">
+
+<section layout:fragment="content">
+    <h1 th:text="${pageTitle}"></h1>
+    1. 상품 검색<br>
+    - 검색항목: 상품명, 카테고리, 상품상태<br>
+    - 각각 검색 조회(상품명, 카테고리), 통합 검색(상품명 + 카테고리)<br><br>
+
+    2. 상품 목록<br>
+    - 상품 각각을 선택 체크박스 추가<br>
+    - 선택된 상품의 상품 상태 변경/삭제 처리
+</section>
+</html>
