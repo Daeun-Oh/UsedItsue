@@ -35,9 +35,9 @@ public class ProductInfoService {
         if (!hasName && !hasCategory) {
             return repository.findAll();
         } else if (hasName && hasCategory) {
-            return repository.findByProductNameAndCategory(productName, category);
+            return repository.findByNameAndCategory(productName, category);
         } else if (hasName) {
-            return repository.findByProductName(productName);
+            return repository.findByName(productName);
         } else {
             return repository.findByCategory(category);
         }
