@@ -1,11 +1,122 @@
 package org.koreait.product.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.global.search.ListData;
+import org.koreait.global.search.Pagination;
+import org.koreait.product.constants.ProductStatus;
+import org.koreait.product.controllers.ProductSearch;
+import org.koreait.product.entities.Product;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Lazy
 @Service
 @RequiredArgsConstructor
 public class ProductInfoService {
+    private final JdbcTemplate jdbcTemplate;
+    private final HttpServletRequest request;
+    /**
+     * 회원 목록
+     *
+     * @param search
+     * @return
+     */
+    public ListData<Product> getList(ProductSearch search) {
+        int page = Math.max(search.getPage(), 1);   // 기본으로 page 1 지정
+        int limit = search.getLimit();
+        limit = limit < 1 ? 20 : limit;
+        int offset = (page - 1) * limit;    // 레코드 시작 번호
+
+        List<String> addWhere = new ArrayList<>();
+        List<Object> params = new ArrayList<>();
+
+        String sopt = search.getSopt();
+        String skey = search.getSkey();
+
+        /**
+         * 키워드 검색
+         * sopt: 검색 옵션
+         * - NAME: 상품명
+         * - CATEGORY: 카테고리
+         * - ALL: 통합검색 (NAME + CATEGORY)
+         * - STATUS : 상품상태
+         */
+        sopt = StringUtils.hasText(sopt) ? sopt : "ALL";
+        if (StringUtils.hasText(skey)) {  // 검색 키워드가 있는 경우
+
+            // 상품명 검색
+            if (sopt.equals("NAME")) {
+                addWhere.add("name LIKE ?");
+            }
+
+            // 카테고리 검색
+            else if (sopt.equalsIgnoreCase("CATEGORY")) {
+                addWhere.add("category LIKE ?");
+            }
+
+            // 통합 검색
+            else {
+                addWhere.add("CONCAT(name, category) LIKE ?");  // CONCAT: 문자열 병합
+            }
+
+            params.add("%" + skey + "%");
+        }
+
+        StringBuffer sb = new StringBuffer(2000);
+        StringBuffer sb2 = new StringBuffer(2000);
+        sb.append("SELECT * FROM PRODUCT");
+        sb2.append("SELECT COUNT(*) FROM PRODUCT");
+
+        if (!addWhere.isEmpty()) {
+            String where = " WHERE " + String.join(" AND ", addWhere);
+            sb.append(where);
+            sb2.append(where);
+        }
+
+        sb.append(" ORDER BY createdAt DESC");
+        sb.append(" LIMIT ?, ?"); // 첫 번째 ?: offset, 두 번째 ?: limit
+
+        int total = jdbcTemplate.queryForObject(sb2.toString(), int.class, params.toArray()); // 검색 조건에 따른 전체 레코드 개수
+
+        params.add(offset);  // 아래 쿼리의 첫 번째 물음표
+        params.add(limit);   // 아래 쿼리의 두 번째 물음표
+
+        List<Product> items = jdbcTemplate.query(sb.toString(), this::mapper, params.toArray());
+
+        // total = 100000;
+
+        Pagination pagination = new Pagination(page, total, 10, 20, request);
+
+        return new ListData<>(items, pagination);
+    }
+
+    private Product mapper(ResultSet rs, int i) throws SQLException {
+        Product item = new Product();
+        item.setSeq(rs.getLong("seq"));
+        item.setGid(rs.getString("gid"));
+        item.setName(rs.getString("name"));
+        item.setCategory(rs.getString("category"));
+        item.setStatus(ProductStatus.valueOf(rs.getString("status")));
+        item.setConsumerPrice(rs.getInt("consumerPrice"));
+        item.setSalePrice(rs.getInt("salePrice"));
+        item.setDescription(rs.getString("description"));
+        Timestamp createdAt = rs.getTimestamp("createdAt");
+        Timestamp modifiedAt = rs.getTimestamp("modifiedAt");
+        Timestamp deletedAt = rs.getTimestamp("deletedAt");
+
+        item.setCreatedAt(createdAt == null ? null : createdAt.toLocalDateTime());
+        item.setModifiedAt(modifiedAt == null ? null : modifiedAt.toLocalDateTime());
+        item.setDeletedAt(deletedAt == null ? null : deletedAt.toLocalDateTime());
+
+        return item;
+    }
 }
