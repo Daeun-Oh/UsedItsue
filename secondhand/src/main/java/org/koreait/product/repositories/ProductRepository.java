@@ -10,6 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface ProductRepository extends ListCrudRepository<Product, Long> {
+import java.util.List;
 
+public interface ProductRepository extends ListCrudRepository<Product, Long> {
+    List<Product> findByProductName(String productName);
+    List<Product> findByCategory(String category);
+    List<Product> findByProductNameAndCategory(String productName, String category);
 }

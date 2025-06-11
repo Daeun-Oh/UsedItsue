@@ -2,11 +2,12 @@ package org.koreait.product.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.koreait.admin.product.controllers.ProductSearch;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
 import org.koreait.product.constants.ProductStatus;
+import org.koreait.product.controllers.ProductSearch;
 import org.koreait.product.entities.Product;
+import org.koreait.product.repositories.ProductRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.util.StringUtils;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +24,36 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductInfoService {
 
+    private final ProductRepository repository;
     private final JdbcTemplate jdbcTemplate;
+    private final HttpServletRequest request;
 
-    // HttpServletRequest를 파라미터로 받는 방식으로 변경
+    public List<Product> searchProducts(String productName, String category) {
+        boolean hasName = productName != null && !productName.isBlank();
+        boolean hasCategory = category != null && !category.isBlank();
+
+        if (!hasName && !hasCategory) {
+            return repository.findAll();
+        } else if (hasName && hasCategory) {
+            return repository.findByProductNameAndCategory(productName, category);
+        } else if (hasName) {
+            return repository.findByProductName(productName);
+        } else {
+            return repository.findByCategory(category);
+        }
+    }
+
+    /**
+     * 회원 목록
+     *
+     * @param search
+     * @return
+     */
     public ListData<Product> getList(ProductSearch search, HttpServletRequest request) {
-        int page = Math.max(search.getPage(), 1);
+        int page = Math.max(search.getPage(), 1);   // 기본으로 page 1 지정
         int limit = search.getLimit();
         limit = limit < 1 ? 20 : limit;
-        int offset = (page - 1) * limit;
+        int offset = (page - 1) * limit;    // 레코드 시작 번호
 
         List<String> addWhere = new ArrayList<>();
         List<Object> params = new ArrayList<>();
@@ -37,16 +61,32 @@ public class ProductInfoService {
         String sopt = search.getSopt();
         String skey = search.getSkey();
 
+        /**
+         * 키워드 검색
+         * sopt: 검색 옵션
+         * - NAME: 상품명
+         * - CATEGORY: 카테고리
+         * - ALL: 통합검색 (NAME + CATEGORY)
+         * - STATUS : 상품상태
+         */
         sopt = StringUtils.hasText(sopt) ? sopt : "ALL";
-        if (StringUtils.hasText(skey)) {
+        if (StringUtils.hasText(skey)) {  // 검색 키워드가 있는 경우
+
+            // 상품명 검색
             if (sopt.equals("NAME")) {
                 addWhere.add("name LIKE ?");
-            } else if (sopt.equals("CATEGORY")) {
-                addWhere.add("category LIKE ?");
-            } else {
-                addWhere.add("(name LIKE ? OR category LIKE ?)");
-                params.add("%" + skey + "%");  // 통합검색용 추가 파라미터
             }
+
+            // 카테고리 검색
+            else if (sopt.equalsIgnoreCase("CATEGORY")) {
+                addWhere.add("category LIKE ?");
+            }
+
+            // 통합 검색
+            else {
+                addWhere.add("CONCAT(name, category) LIKE ?");  // CONCAT: 문자열 병합
+            }
+
             params.add("%" + skey + "%");
         }
 
@@ -64,14 +104,15 @@ public class ProductInfoService {
             sb2.append(where);
         }
 
-        sb.append(" ORDER BY createdAt DESC LIMIT ?, ?");
+        sb.append(" ORDER BY createdAt DESC");
+        sb.append(" LIMIT ?, ?"); // 첫 번째 ?: offset, 두 번째 ?: limit
 
-        // 전체 개수 조회
+        // 검색 조건에 따른 전체 레코드 개수 조회
         int total = jdbcTemplate.queryForObject(sb2.toString(), int.class, params.toArray());
 
         // 페이징 파라미터 추가
-        params.add(offset);
-        params.add(limit);
+        params.add(offset);  // 아래 쿼리의 첫 번째 물음표
+        params.add(limit);   // 아래 쿼리의 두 번째 물음표
 
         // 실제 데이터 조회
         List<Product> items = jdbcTemplate.query(sb.toString(), this::mapper, params.toArray());
@@ -79,32 +120,29 @@ public class ProductInfoService {
         // 페이징 정보 생성
         Pagination pagination = new Pagination(page, total, 10, 20, request);
 
+
         return new ListData<>(items, pagination);
     }
 
     // RowMapper 구현
-    private Product mapper(ResultSet rs, int rowNum) throws SQLException {
-        Product product = new Product();
-        product.setSeq(rs.getLong("seq"));
-        product.setGid(rs.getString("gid"));
-        product.setName(rs.getString("name"));
-        product.setCategory(rs.getString("category"));
-        product.setStatus(ProductStatus.valueOf(rs.getString("status")));
-        product.setConsumerPrice(rs.getInt("consumerPrice"));
-        product.setSalePrice(rs.getInt("salePrice"));
-        product.setDescription(rs.getString("description"));
+    private Product mapper(ResultSet rs, int i) throws SQLException {
+        Product item = new Product();
+        item.setSeq(rs.getLong("seq"));
+        item.setGid(rs.getString("gid"));
+        item.setName(rs.getString("name"));
+        item.setCategory(rs.getString("category"));
+        item.setStatus(ProductStatus.valueOf(rs.getString("status")));
+        item.setConsumerPrice(rs.getInt("consumerPrice"));
+        item.setSalePrice(rs.getInt("salePrice"));
+        item.setDescription(rs.getString("description"));
+        Timestamp createdAt = rs.getTimestamp("createdAt");
+        Timestamp modifiedAt = rs.getTimestamp("modifiedAt");
+        Timestamp deletedAt = rs.getTimestamp("deletedAt");
 
-        // 날짜 필드 처리
-        if (rs.getTimestamp("createdAt") != null) {
-            product.setCreatedAt(rs.getTimestamp("createdAt").toLocalDateTime());
-        }
-        if (rs.getTimestamp("modifiedAt") != null) {
-            product.setModifiedAt(rs.getTimestamp("modifiedAt").toLocalDateTime());
-        }
-        if (rs.getTimestamp("deletedAt") != null) {
-            product.setDeletedAt(rs.getTimestamp("deletedAt").toLocalDateTime());
-        }
+        item.setCreatedAt(createdAt == null ? null : createdAt.toLocalDateTime());
+        item.setModifiedAt(modifiedAt == null ? null : modifiedAt.toLocalDateTime());
+        item.setDeletedAt(deletedAt == null ? null : deletedAt.toLocalDateTime());
 
-        return product;
+        return item;
     }
 }
