@@ -2,6 +2,8 @@ package org.koreait.product.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.koreait.product.entities.Product;
+import org.koreait.product.repositories.ProductRepository;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
 import org.koreait.product.constants.ProductStatus;
@@ -18,10 +20,28 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.List;
+
 @Lazy
 @Service
 @RequiredArgsConstructor
 public class ProductInfoService {
+
+    private final ProductRepository repository;
+
+    public List<Product> searchProducts(String productName, String category) {
+        boolean hasName = productName != null && !productName.isBlank();
+        boolean hasCategory = category != null && !category.isBlank();
+
+        if (!hasName && !hasCategory) {
+            return repository.findAll();
+        } else if (hasName && hasCategory) {
+            return repository.findByProductNameAndCategory(productName, category);
+        } else if (hasName) {
+            return repository.findByProductName(productName);
+        } else {
+            return repository.findByCategory(category);
+        }
     private final JdbcTemplate jdbcTemplate;
     private final HttpServletRequest request;
     /**

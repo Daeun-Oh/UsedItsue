@@ -5,13 +5,14 @@
 
 <section layout:fragment="content">
     <h2>회원 검색</h2>
-    <form name="frmSearch" method="get" th:action="@{/admin/member}" autocomplete="off" th:object="${memberSearch}">
+    <form name="frmSearch" method="get" th:action="@{/admin/product}" autocomplete="off" th:object="${productSearch}">
         <table class="table-cols">
-            <th>회원권한</th>
+            <th>판매 상태</th>
             <td>
-                <span th:each="auth : ${authorities}" class="checkbox">
-                    <input type="checkbox" name="authority" th:value="${auth.name()}" th:id="${'authority-' + auth.name()}">
-                    <label th:for="${'authority-' + auth.name()}" th:text="${#messages.msg('authority.' + auth.name())}"></label>
+                <span th:each="ps : ${productStatuses}" class="checkbox">
+                    <input type="checkbox" name="productStatus" th:value="${ps.name()}" th:id="${'productStatus-' + ps.name()}">
+                    <label th:for="${'productStatus-' + ps.name()}" th:text="${#messages.msg('productStatus.' + ps.name())}"></label>
+
                 </span>
             </td>
             <tr>
@@ -19,9 +20,9 @@
                 <td class="flex">
                     <select name="sopt" th:field="*{sopt}" class="w180 mr5">
                         <option value="ALL">통합 검색</option>
-                        <option value="EMAIL">이메일</option>
-                        <option value="NAME">회원명</option>
-                        <option value="MOBILE">휴대전화번호</option>
+
+                        <option value="PNAME">상품명</option>
+                        <option value="CATEGORY">카테고리</option>
                     </select>
                     <input type="text" name="skey" th:field="*{skey}" placeholder="검색어를 입력하세요.">
                 </td>
@@ -29,9 +30,10 @@
         </table>
         <button type="submit" class="submit-btn">검색하기</button>
     </form>
-    <h2>회원 목록</h2>
+    <h2>상품 목록</h2>
     <!-- target="ifrmProcess" - target을 현재 페이지 내 다른 창으로 설정해, PATCH 후에도 웹페이지 이동이 일어나지 않게 함 -->
-    <form name="frmList" method="POST" th:action="@{/admin/member}" autocomplete="off" target="ifrmProcess">
+    <form name="frmList" method="POST" th:action="@{/admin/product}" autocomplete="off" target="ifrmProcess">
+
         <input type="hidden" name="_method" value="PATCH">
         <table class="table-rows">
             <thead>
@@ -40,12 +42,15 @@
                     <input type="checkbox" class="check-all" id="check-all" data-target-name="chk">
                     <label for="check-all" class="standalone"></label>
                 </th>
-                <th>회원명</th>
-                <th>이메일</th>
-                <th>휴대전화번호</th>
-                <th>비밀번호 변경 일시</th>
-                <th>회원탈퇴여부</th>
-                <th>가입일시</th>
+                <th>상품명</th>
+                <th>분류</th>
+                <th>판매 상태</th>
+                <th>소비자 가격</th>
+                <th>판매 가격</th>
+                <th>상품 설명</th>
+                <th>정보 수정 일시</th>
+                <th>등록 해제 여부</th>
+                <th>등록 일시</th>
             </tr>
             </thead>
             <tbody>
@@ -57,10 +62,29 @@
                 </td>
                 <td align="center">
                     <th:block th:text="*{name}"></th:block>
+
+                    <div class="badge" th:text="*{#messages.msg('productStatus.' + productStatus)}" align="center"></div>
+                </td>
+                <td align="center">
+                    <th:block th:text="*{category}"></th:block>
                     <div class="badge" th:text="*{#messages.msg('authority.' + authority)}" align="center"></div>
                 </td>
-                <td th:text="*{email}" align="center"></td>
-                <td th:text="*{#strings.concat(#strings.substring(mobile, 0, 3), '-', #strings.substring(mobile, 3, 7), '-', #strings.substring(mobile, 7))}" align="center"></td>
+                <td align="center">
+                    <th:block th:text="*{status}"></th:block>
+                    <div class="badge" th:text="*{#messages.msg('authority.' + authority)}" align="center"></div>
+                </td>
+                <td align="center">
+                    <th:block th:text="*{consumerPrice}"></th:block>
+                    <div class="badge" th:text="*{#messages.msg('authority.' + authority)}" align="center"></div>
+                </td>
+                <td align="center">
+                    <th:block th:text="*{salePrice}"></th:block>
+                    <div class="badge" th:text="*{#messages.msg('authority.' + authority)}" align="center"></div>
+                </td>
+                <td align="center">
+                    <th:block th:text="*{description}"></th:block>
+                    <div class="badge" th:text="*{#messages.msg('authority.' + authority)}" align="center"></div>
+                </td>
                 <td>
                     <div th:text="*{#temporals.format(credentialChangedAt, 'yy.MM.dd HH:mm')}" align="center"></div>
                     <input type="checkbox" th:name="${'updateCredentialAt_' + status.index}" value="true" th:id="${'updateCredentialAt_' + status.index}">
@@ -68,10 +92,10 @@
                 </td>
                 <td align="center">
                     <th:block th:if="*{deletedAt != null}">
-                        <div class="badge" th:text="*{#strings.concat('탈퇴(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'), ')')}"></div>
+                        <div class="badge" th:text="*{#strings.concat('삭제(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'), ')')}"></div>
                         <span class="checkbox">
                             <input type="checkbox" th:name="${'cancelResign_' + status.index}" value="true" th:id="${'cancelResign_' + status.index}">
-                            <label th:for="${'cancelResign_' + status.index}">탈퇴 취소하기</label>
+                            <label th:for="${'cancelResign_' + status.index}">삭제 취소하기</label>
                         </span>
                     </th:block>
                 </td>
@@ -79,14 +103,14 @@
             </tr>
             <tr th:unless="${items != null && !items.isEmpty()}">
                 <td colspan="7" class="no-data">
-                    조회된 회원이 없습니다.
+                    조회된 상품이 없습니다.
                 </td>
             </tr>
             </tbody>
         </table>
         <div class="table-action">
-            <button type="button" class="sbtn process-form delete" data-form-name="frmList">선택회원 탈퇴시키기</button>
-            <button type="button" class="sbtn black process-form edit" data-form-name="frmList">선택회원 수정하기</button>
+            <button type="button" class="sbtn process-form delete" data-form-name="frmList">상품 정보 수정</button>
+            <button type="button" class="sbtn black process-form edit" data-form-name="frmList">상품 등록 해제</button>
         </div>
     </form>
     <th:block th:replace="~{common/_pagination::pagination}"></th:block>
