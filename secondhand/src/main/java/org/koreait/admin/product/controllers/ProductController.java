@@ -4,7 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.product.constants.ProductStatus;
+import org.koreait.product.controllers.ProductSearch;
 import org.koreait.product.controllers.RequestProduct;
+import org.koreait.product.services.ProductInfoService;
 import org.koreait.product.services.ProductUpdateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,7 @@ import java.util.UUID;
 public class ProductController extends CommonController {
 
     private final ProductUpdateService updateService;
+    private final ProductInfoService infoService;
 
     /**
      * 관리자의 정형화된 틀
@@ -48,8 +51,12 @@ public class ProductController extends CommonController {
      * 상품 목록
      */
     @GetMapping({"", "/list"})
-    public String list(Model model) {
+    public String list(Model model, ProductSearch search) {
         commonProcess("list", model);
+
+//        ListData<Product> data = infoService.getList(search);
+//        model.addAttribute("items", data.getItems());
+//        model.addAttribute("pagination", data.getPagination());
 
         return "admin/product/list";
     }
