@@ -67,6 +67,9 @@ public class SecurityConfig {
             c.accessDeniedHandler(new MemberAccessDeniedHandler()); // 인증 받은 회원이 권한이 없는 페이지에 접근한 경우
         });
         /* 인가 설정 E */
+
+        http.headers(c -> c.frameOptions(f -> f.sameOrigin()));
+
         return http.build();
     }
 
