@@ -1,7 +1,7 @@
 package org.koreait.product.services;
 
 import lombok.RequiredArgsConstructor;
-import org.koreait.admin.product.controllers.RequestProduct;
+import org.koreait.product.controllers.RequestProduct;
 import org.koreait.product.entities.Product;
 import org.koreait.product.repositories.ProductRepository;
 import org.springframework.context.annotation.Lazy;
