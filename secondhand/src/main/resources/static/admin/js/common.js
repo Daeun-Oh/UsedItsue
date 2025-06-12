@@ -71,6 +71,17 @@ window.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+    // 상태 변경 후 iframe 응답 수신 시 체크박스 초기화
+    const iframe = document.querySelector('iframe[name="ifrmProcess"]');
+    if (iframe) {
+        iframe.addEventListener('load', function () {
+            // 상태 변경 후 iframe 로드 완료되면 체크박스 해제
+            document.querySelectorAll('input[name="chk"]:checked').forEach(cb => {
+                cb.checked = false;
+            });
+        });
+    }
+
     /* text 입력 자동 사이징 S */
     document.addEventListener("input", function (e) {
         if (e.target.matches(".auto-grow")) {
