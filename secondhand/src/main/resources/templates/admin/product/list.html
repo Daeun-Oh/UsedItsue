@@ -91,7 +91,7 @@
                     <div class="description-preview" th:text="*{#strings.abbreviate(description, 30)}"></div>
                 <!--<td align="center" th:text="#{${#strings.concat('productStatus.', item.status.name())}}">-->
                 <td align="center">
-                    <select th:name="${'newStatus_' + status.index}" class="w100 status-select" th:data-index="${status.index}">
+                    <select th:name="${'newStatus_' + status.index}" th:id="${'newStatus_' + status.index}" class="w100 status-select" th:attr="data-index=${status.index}">
                         <option th:each="s : ${statusList}"
                                 th:value="${s.name()}"
                                 th:selected="${s} == *{status}"
