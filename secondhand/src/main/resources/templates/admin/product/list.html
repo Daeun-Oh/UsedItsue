@@ -34,6 +34,7 @@
         <button type="submit" class="submit-btn">검색하기</button>
     </form>
     <h2>상품 목록</h2>
+    <button type="button" id="unlockMode" class="sbtn gray">수정 모드 켜기</button>
     <!-- target="ifrmProcess" - target을 현재 페이지 내 다른 창으로 설정해, PATCH 후에도 웹페이지 이동이 일어나지 않게 함 -->
     <form name="frmList" method="POST" th:action="@{/admin/product}" autocomplete="off" target="ifrmProcess">
 
@@ -69,17 +70,19 @@
                 <td align="center" th:text="*{consumerPrice}"></td>
                 <td align="center" th:text="*{salePrice}"></td>
                 <td align="center" th:text="*{description}"></td>
-                <td>
+                <td align="center">
                     <div th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}" align="center"></div>
-                    <input type="checkbox" th:name="${'modifiedAt_' + status.index}" value="true" th:id="${'modifiedAt_' + status.index}">
-                    <label th:for="${'modifiedAt_' + status.index}">업데이트</label>
+                    <span class="checkbox">
+                        <input type="checkbox" th:name="${'updateModifiedAt_' + status.index}" value="true" th:id="${'updateModifiedAt_' + status.index}">
+                        <label th:for="${'updateModifiedAt_' + status.index}">업데이트</label>
+                    </span>
                 </td>
                 <td align="center">
                     <th:block th:if="*{deletedAt != null}">
                         <div class="badge" th:text="*{#strings.concat('삭제(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'), ')')}"></div>
                         <span class="checkbox">
-                            <input type="checkbox" th:name="${'cancelResign_' + status.index}" value="true" th:id="${'cancelResign_' + status.index}">
-                            <label th:for="${'cancelResign_' + status.index}">삭제 취소하기</label>
+                            <input type="checkbox" th:name="${'cancelDelete_' + status.index}" value="true" th:id="${'cancelDelete_' + status.index}">
+                            <label th:for="${'cancelDelete_' + status.index}">삭제 취소하기</label>
                         </span>
                     </th:block>
                 </td>
@@ -93,8 +96,8 @@
             </tbody>
         </table>
         <div class="table-action">
-            <button type="button" class="sbtn process-form delete" data-form-name="frmList">상품 정보 수정</button>
-            <button type="button" class="sbtn black process-form edit" data-form-name="frmList">상품 등록 해제</button>
+            <button type="button" class="sbtn process-form delete" data-form-name="frmList">등록 해제</button>
+            <button type="button" class="sbtn black process-form edit" data-form-name="frmList">정보 수정</button>
         </div>
     </form>
     <th:block th:replace="~{common/_pagination::pagination}"></th:block>
