@@ -34,7 +34,6 @@
         <button type="submit" class="submit-btn">검색하기</button>
     </form>
     <h2>상품 목록</h2>
-    <button type="button" id="unlockMode" class="sbtn gray">수정 모드 켜기</button>
     <!-- target="ifrmProcess" - target을 현재 페이지 내 다른 창으로 설정해, PATCH 후에도 웹페이지 이동이 일어나지 않게 함 -->
     <form name="frmList" method="POST" th:action="@{/admin/product}" autocomplete="off" target="ifrmProcess">
 
@@ -70,13 +69,7 @@
                 <td align="center" th:text="*{consumerPrice}"></td>
                 <td align="center" th:text="*{salePrice}"></td>
                 <td align="center" th:text="*{description}"></td>
-                <td align="center">
-                    <div th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}" align="center"></div>
-                    <span class="checkbox">
-                        <input type="checkbox" th:name="${'updateModifiedAt_' + status.index}" value="true" th:id="${'updateModifiedAt_' + status.index}">
-                        <label th:for="${'updateModifiedAt_' + status.index}">업데이트</label>
-                    </span>
-                </td>
+                <td align="center" th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}"></td>
                 <td align="center">
                     <th:block th:if="*{deletedAt != null}">
                         <div class="badge" th:text="*{#strings.concat('삭제(', #temporals.format(deletedAt, 'yy.MM.dd HH:mm'), ')')}"></div>
