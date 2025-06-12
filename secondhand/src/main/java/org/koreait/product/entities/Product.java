@@ -28,4 +28,7 @@ public class Product extends BaseEntity {
     private int salePrice;
 
     private String description;
+
+    @Column("imagePath")
+    private String imagePath;
 }

@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.koreait.product.services.ProductFileUploadService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProductController extends CommonController {
     private final ProductUpdateService updateService;
     private final ProductInfoService infoService;
     private final HttpServletRequest request;
+    private final ProductFileUploadService fileUploadService;
 
     /**
      * 관리자의 정형화된 틀
@@ -114,17 +116,39 @@ public class ProductController extends CommonController {
      */
     @PostMapping("/save")
     public String saveProduct(@Valid RequestProduct form, Errors errors, Model model) {
-        String mode = Objects.requireNonNullElse(form.getMode(), "add");
-        commonProcess(mode.equals("edit") ? "register" : "update", model);
+        try {
+            System.out.println("렛츠고");
 
-        if (errors.hasErrors()) {
-            return "admin/product/" + (mode.equals("edit") ? "update" : "register");
+            String mode = Objects.requireNonNullElse(form.getMode(), "add");
+            commonProcess(mode.equals("edit") ? "register" : "update", model);
+
+            if (errors.hasErrors()) {
+                System.out.println("이브이");
+                System.out.println("=== 오류 목록 ===");
+                errors.getFieldErrors().forEach(error -> {
+                    System.out.println("필드: " + error.getField() + ", 오류: " + error.getDefaultMessage());
+                });
+                return "admin/product/" + (mode.equals("edit") ? "update" : "register");
+            }
+
+            if (form.getImage() != null && !form.getImage().isEmpty()) {
+                String imagePath = fileUploadService.uploadImage(form.getImage());
+                form.setImagePath(imagePath);
+            }
+            System.out.println("피카츄");
+
+            updateService.process(form);
+
+
+            // 상품 등록 완료 후 상품 목록으로 이동
+            return "redirect:/admin/product";
+        }
+        catch (Exception e) {
+            System.out.println("뭔가 잘못됨");
+            e.printStackTrace();
+            return "admin/product/add";
         }
 
-        updateService.process(form);
-
-        // 상품 등록 완료 후 상품 목록으로 이동
-        return "redirect:/admin/product";
     }
 
     /**
