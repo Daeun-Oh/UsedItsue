@@ -39,7 +39,6 @@ file:
   upload:
     url: ${file.url}
     path: ${file.path}
-    path2: ${file.path2} #./src/main/resources/static/uploads/products/
 
 # 파이썬 설정
 python:
