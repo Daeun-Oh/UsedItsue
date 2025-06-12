@@ -1,10 +1,15 @@
 package org.koreait.admin.product.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
+import org.koreait.global.search.ListData;
 import org.koreait.product.constants.ProductStatus;
+import org.koreait.product.controllers.ProductSearch;
 import org.koreait.product.controllers.RequestProduct;
+import org.koreait.product.entities.Product;
+import org.koreait.product.services.ProductInfoService;
 import org.koreait.product.services.ProductUpdateService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +28,8 @@ import java.util.UUID;
 public class ProductController extends CommonController {
 
     private final ProductUpdateService updateService;
+    private final ProductInfoService infoService;
+    private final HttpServletRequest request;
 
     /**
      * 관리자의 정형화된 틀
@@ -48,10 +55,29 @@ public class ProductController extends CommonController {
      * 상품 목록
      */
     @GetMapping({"", "/list"})
-    public String list(Model model) {
+    public String list(Model model, ProductSearch search) {
         commonProcess("list", model);
 
+        ListData<Product> data = infoService.getList(search, request);
+        model.addAttribute("items", data.getItems());
+        model.addAttribute("statusList", ProductStatus.values());
+        model.addAttribute("pagination", data.getPagination());
+
         return "admin/product/list";
+    }
+
+
+    /**
+     * 상품 정보 수정 or 삭제 후 이동할 페이지
+     */
+    @RequestMapping({"", "list"})
+    public String listPs(@RequestParam(name="chk", required = false) List<Integer> chks, Model model) {
+
+        updateService.processBatch(chks);
+
+        // 처리 완료 후에는 부모 창의 목록을 새로고침
+        model.addAttribute("script", "parent.location.reload();");
+        return "common/_execute_script";
     }
 
     /**
