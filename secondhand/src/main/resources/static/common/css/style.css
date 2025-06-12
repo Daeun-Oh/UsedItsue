@@ -21,17 +21,18 @@ footer{
 }
 
 footer>div.flex{
-    display:flex;
     grow:1;
     a:first-child{
         border:0 !important;
     }
     margin-bottom:10px;
     box-shadow: 0 0 4px rgba(1, 45, 28, 0.1);
+    padding:0;
 }
 footer a {
     padding: 10px 20px;
-    width:14%;
+    width: calc(100% / 7);
     border-left:1px solid #012d1c;
     box-sizing:border-box;
+    text-align:center
 }
