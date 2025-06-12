@@ -47,35 +47,13 @@ window.addEventListener("DOMContentLoaded", function() {
 
     /* 전체 선택 버튼 S */
     const allCheckbox = document.getElementById("status-ALL");
-        const otherCheckboxes = document.querySelectorAll("input[name='status']:not(#status-ALL)");
-
-        if (allCheckbox) {
-            // 전체 선택 클릭 시 → 하위 전체 선택/해제
-            allCheckbox.addEventListener("change", function () {
-                otherCheckboxes.forEach(cb => cb.checked = this.checked);
-            });
-
-            // 하위 체크박스들 중 하나가 바뀌면 전체 상태도 조정
-            otherCheckboxes.forEach(cb => {
-                cb.addEventListener("change", function () {
-                    const allChecked = Array.from(otherCheckboxes).every(c => c.checked);
-                    allCheckbox.checked = allChecked;
-                });
-            });
-        }
-    /* 전체 선택 버튼 E */
-
-    /* 전체 선택 버튼 S */
-    const allCheckbox = document.getElementById("status-ALL");
-    const otherCheckboxes = document.querySelectorAll("input[name='status']:not(#status-ALL)");
+    const otherCheckboxes = document.querySelectorAll("input[name='statusList']:not(#status-ALL)");
 
     if (allCheckbox) {
-        // 전체 선택 클릭 시 → 하위 전체 선택/해제
         allCheckbox.addEventListener("change", function () {
             otherCheckboxes.forEach(cb => cb.checked = this.checked);
         });
 
-        // 하위 체크박스들 중 하나가 바뀌면 전체 상태도 조정
         otherCheckboxes.forEach(cb => {
             cb.addEventListener("change", function () {
                 const allChecked = Array.from(otherCheckboxes).every(c => c.checked);

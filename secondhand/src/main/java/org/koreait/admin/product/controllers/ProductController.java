@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.global.search.ListData;
+import org.koreait.product.constants.ProductAll;
 import org.koreait.product.constants.ProductStatus;
 import org.koreait.product.controllers.ProductSearch;
 import org.koreait.product.controllers.RequestProduct;
@@ -49,6 +50,11 @@ public class ProductController extends CommonController {
     @ModelAttribute("statusList")
     public ProductStatus[] statusList() {
         return ProductStatus.values();
+    }
+
+    @ModelAttribute("productAll")
+    public ProductAll[] productAlls() {
+        return ProductAll.values();
     }
 
     /**
