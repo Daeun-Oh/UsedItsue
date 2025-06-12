@@ -71,7 +71,7 @@
                 <td align="center" th:text="*{category}"></td>
                 <!--<td align="center" th:text="#{${#strings.concat('productStatus.', item.status.name())}}">-->
                 <td align="center">
-                    <select th:name="${'newStatus_' + status.index}" class="w100 status-select" th:data-index="${status.index}">
+                    <select th:name="${'newStatus_' + status.index}" th:id="${'newStatus_' + status.index}" class="w100 status-select" th:attr="data-index=${status.index}">
                         <option th:each="s : ${statusList}"
                                 th:value="${s.name()}"
                                 th:selected="${s} == *{status}"
