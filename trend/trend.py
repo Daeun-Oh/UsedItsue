@@ -39,12 +39,12 @@ stat = Counter(words).most_common(50)
 
 # 워드 클라우드 이미지 생성
 image_file = strftime('%Y%m%d%H') + "_news.jpg"
-wc = WordCloud(font_path='C:/Users/User/Desktop/UsedItsue/trend/fonts/NanumGothic-ExtraBold.ttf', 
+wc = WordCloud(font_path='C:/Users/slgia/Downloads/UsedItsue/trend/fonts/NanumGothic-ExtraBold.ttf', 
                 background_color='white', 
                 max_font_size=200,
                 width=700, height=450)
 cloud = wc.generate_from_frequencies(dict(stat))
-cloud.to_file(f"{path}/{image_file}")
+cloud.to_file(f"{path}/{strftime("%Y%m%d%H")}_news.jpg")
 
 # JSON 문자열로 출력
 data = {"image": image_file, "keywords": dict(stat)}

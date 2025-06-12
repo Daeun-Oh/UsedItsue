@@ -122,31 +122,4 @@ public class MemberController {
         model.addAttribute("addScript", addScript);
         model.addAttribute("pageTitle", pageTitle);
     }
-
-//    @ResponseBody
-//    @GetMapping("/test")
-//    public void test(Principal principal) {
-//        String email = principal.getName();
-//        System.out.println("email:" + email);
-//    }
-
-//    @ResponseBody
-//    @GetMapping("/test")
-//    public void test(@AuthenticationPrincipal MemberInfo memberInfo) {
-//        System.out.println("memberInfo:" + memberInfo);
-//    }
-
-//    @ResponseBody
-//    @GetMapping("/test")
-//    public void test() {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        System.out.println("인증상태:" + auth.isAuthenticated());
-//        System.out.println("Principle:" + auth.getPrincipal());
-//    }
-
-//    @ResponseBody
-//    @GetMapping("/test")
-//    public void test() {
-//        System.out.printf("로그인:%s, 관리자여부:%s, 회원정보:%s%n", memberUtil.isLogin(), memberUtil.isAdmin(), memberUtil.getMember());
-//    }
 }
