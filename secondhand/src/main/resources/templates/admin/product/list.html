@@ -11,7 +11,7 @@
                 <th width="120">판매 상태</th>
                 <td>
                     <span th:each="stat : ${statusList}" class="checkbox">
-                        <input type="checkbox" name="statusList" th:value="${stat.name()}" th:id="${'status-' + stat.name()}">
+                        <input type="checkbox" name="status" th:value="${stat.name()}" th:id="${'status-' + stat.name()}">
                         <label th:for="${'status-' + stat.name()}" th:text="#{${'productStatus.' + stat.name()}}"></label>
                     </span>
                 </td>
