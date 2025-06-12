@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.koreait.global.exceptions.script.AlertException;
 import org.koreait.global.libs.Utils;
+import org.koreait.product.constants.ProductStatus;
 import org.koreait.product.controllers.RequestProduct;
 import org.koreait.product.entities.Product;
 import org.koreait.product.repositories.ProductRepository;
@@ -93,6 +94,31 @@ public class ProductUpdateService {
 
             products.add(product);
         }
+        repository.saveAll(products);
+    }
+    /**
+     * 전달받은 상품 ID 리스트에 대해 각각 상태를 변경합니다.
+     *
+     * @param ids       상태를 변경할 상품의 ID 리스트
+     * @param statuses  각 상품에 적용할 새로운 상태값 리스트 (ids와 인덱스 일치)
+     *
+     */
+    public void updateStatus(List<Long> ids, List<String> statuses) {
+        if (ids == null || statuses == null || ids.size() != statuses.size()) return;
+
+        List<Product> products = new ArrayList<>();
+
+        for (int i = 0; i < ids.size(); i++) {
+            Product product = repository.findById(ids.get(i)).orElse(null);
+            if (product == null) continue;
+
+            try {
+                ProductStatus ps = ProductStatus.valueOf(statuses.get(i));
+                product.setStatus(ps);
+                products.add(product);
+            } catch (IllegalArgumentException ignore) {}
+        }
+
         repository.saveAll(products);
     }
 }

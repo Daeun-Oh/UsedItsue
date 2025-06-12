@@ -36,7 +36,7 @@
     <h2>상품 목록</h2>
     <button type="button" id="unlockMode" class="sbtn gray">수정 모드 켜기</button>
     <!-- target="ifrmProcess" - target을 현재 페이지 내 다른 창으로 설정해, PATCH 후에도 웹페이지 이동이 일어나지 않게 함 -->
-    <form name="frmList" method="POST" th:action="@{/admin/product}" autocomplete="off" target="ifrmProcess">
+    <form name="frmList" method="POST" th:action="@{/admin/product/status}" autocomplete="off" target="ifrmProcess">
 
         <input type="hidden" name="_method" value="PATCH">
         <table class="table-rows">
@@ -66,7 +66,15 @@
                 </td>
                 <td align="center" th:text="*{name}"></td>
                 <td align="center" th:text="*{category}"></td>
-                <td align="center" th:text="#{${#strings.concat('productStatus.', item.status.name())}}"></td>
+                <!--<td align="center" th:text="#{${#strings.concat('productStatus.', item.status.name())}}">-->
+                <td align="center">
+                    <select th:name="${'newStatus_' + status.index}" class="w100 status-select" th:data-index="${status.index}">
+                        <option th:each="s : ${statusList}"
+                                th:value="${s.name()}"
+                                th:selected="${s} == *{status}"
+                                th:text="${#messages.msg('productStatus.' + s.name())}"></option>
+                    </select>
+                </td>
                 <td align="center" th:text="*{consumerPrice}"></td>
                 <td align="center" th:text="*{salePrice}"></td>
                 <td align="center" th:text="*{description}"></td>
@@ -102,4 +110,9 @@
     </form>
     <th:block th:replace="~{common/_pagination::pagination}"></th:block>
 </section>
+
+<script>
+
+</script>
+
 </html>
