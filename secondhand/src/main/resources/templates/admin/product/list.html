@@ -10,8 +10,12 @@
             <tr>
                 <th width="120">판매 상태</th>
                 <td>
+                    <span th:each="all : ${productAll}" class="checkbox">
+                        <input type="checkbox" name="statusList" th:value="${all.name()}" th:id="${'status-' + all.name()}">
+                        <label th:for="${'status-' + all.name()}" th:text="#{${'productAll.' + all.name()}}"></label>
+                    </span>
                     <span th:each="stat : ${statusList}" class="checkbox">
-                        <input type="checkbox" name="status" th:value="${stat.name()}" th:id="${'status-' + stat.name()}">
+                        <input type="checkbox" name="statusList" th:value="${stat.name()}" th:id="${'status-' + stat.name()}">
                         <label th:for="${'status-' + stat.name()}" th:text="#{${'productStatus.' + stat.name()}}"></label>
                     </span>
                 </td>
@@ -85,6 +89,20 @@
                 <td align="center" th:text="${#numbers.formatInteger(item.salePrice, 0, 'COMMA')} + '원'"></td>
                 <td align="center">
                     <div class="description-preview" th:text="*{#strings.abbreviate(description, 30)}"></div>
+                <!--<td align="center" th:text="#{${#strings.concat('productStatus.', item.status.name())}}">-->
+                <td align="center">
+                    <select th:name="${'newStatus_' + status.index}" class="w100 status-select" th:data-index="${status.index}">
+                        <option th:each="s : ${statusList}"
+                                th:value="${s.name()}"
+                                th:selected="${s} == *{status}"
+                                th:text="${#messages.msg('productStatus.' + s.name())}"></option>
+                    </select>
+                </td>
+                <td align="center" th:text="*{consumerPrice}"></td>
+                <td align="center" th:text="*{salePrice}"></td>
+                <td align="center" th:text="*{description}"></td>
+                <td align="center">
+                    <div th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}" align="center"></div>
                 </td>
                 <td align="center" th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}"></td>
                 <td align="center">

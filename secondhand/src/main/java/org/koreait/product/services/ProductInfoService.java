@@ -18,6 +18,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Lazy
 @Service
@@ -60,6 +61,13 @@ public class ProductInfoService {
 
         String sopt = search.getSopt();
         String skey = search.getSkey();
+
+        List<ProductStatus> statusList = search.getStatusList();
+        if (statusList != null && !statusList.isEmpty()) {
+            String placeholders = statusList.stream().map(s -> "?").collect(Collectors.joining(", "));
+            addWhere.add("status IN (" + placeholders + ")");
+            params.addAll(statusList.stream().map(Enum::name).toList());
+        }
 
         /**
          * 키워드 검색

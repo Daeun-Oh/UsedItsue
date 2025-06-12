@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.koreait.admin.global.controllers.CommonController;
 import org.koreait.global.search.ListData;
+import org.koreait.product.constants.ProductAll;
 import org.koreait.product.constants.ProductStatus;
 import org.koreait.product.controllers.ProductSearch;
 import org.koreait.product.controllers.RequestProduct;
@@ -53,6 +54,11 @@ public class ProductController extends CommonController {
         return ProductStatus.values();
     }
 
+    @ModelAttribute("productAll")
+    public ProductAll[] productAlls() {
+        return ProductAll.values();
+    }
+
     /**
      * 상품 목록
      */
@@ -73,7 +79,7 @@ public class ProductController extends CommonController {
      * 상품 정보 수정 or 삭제 후 이동할 페이지
      */
     @RequestMapping({"", "list"})
-    public String listPs(@RequestParam(name="chk", required = false) List<Integer> chks, Model model) {
+    public String listPs(@RequestParam(name = "chk", required = false) List<Integer> chks, Model model) {
 
         updateService.processBatch(chks);
 
@@ -170,5 +176,44 @@ public class ProductController extends CommonController {
         model.addAttribute("subCode", code);
         model.addAttribute("addCommonScript", addCommonScript);
         model.addAttribute("addScript", addScript);
+    }
+
+    /**
+     * 선택된 상품들의 상태를 일괄 변경합니다.
+     *
+     * @param request HTTP 요청 객체, 폼에서 전달된 데이터 포함
+     * @param model   뷰로 전달할 데이터 모델
+     * @return 상태 변경 후 실행할 스크립트 뷰 경로
+     */
+    @PatchMapping("/status")
+    public String updateStatus(HttpServletRequest request, Model model) {
+        String[] chkIndexes = request.getParameterValues("chk");
+
+        if (chkIndexes == null || chkIndexes.length == 0) {
+            model.addAttribute("script", "alert('선택된 상품이 없습니다.'); history.back();");
+            return "common/_execute_script";
+        }
+
+        List<Long> ids = new ArrayList<>();
+        List<String> statuses = new ArrayList<>();
+
+        for (String idx : chkIndexes) {
+            String seqStr = request.getParameter("seq_" + idx);
+            String statusStr = request.getParameter("newStatus_" + idx);
+
+            if (seqStr == null || statusStr == null) continue;
+
+            try {
+                Long id = Long.parseLong(seqStr);
+                ids.add(id);
+                statuses.add(statusStr);
+            } catch (NumberFormatException ignore) {
+            }
+        }
+
+        updateService.updateStatus(ids, statuses); // 리스트로 처리
+
+        return "common/_execute_script";
+
     }
 }
