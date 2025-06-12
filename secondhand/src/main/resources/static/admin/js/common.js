@@ -59,4 +59,17 @@ window.addEventListener("DOMContentLoaded", function() {
     }
     /* 전체 선택 버튼 E */
 
+    /* text 입력 자동 사이징 S */
+    document.addEventListener("input", function (e) {
+        if (e.target.matches(".auto-grow")) {
+            e.target.style.height = "auto";
+            e.target.style.height = e.target.scrollHeight + "px";
+        }
+        if (e.target.matches(".auto-stretch")) {
+            e.target.style.width = "auto";
+            e.target.style.width = e.target.scrollWidth + "px";
+        }
+    });
+    /* text 입력 자동 사이징 E */
+
 });
