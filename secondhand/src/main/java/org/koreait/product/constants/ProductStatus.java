@@ -1,6 +1,6 @@
 package org.koreait.product.constants;
 
-public enum ProductStatus {
+public enum iginProductStatus {
     READY,
     SALE,
     OUT_OF_STOCK,
