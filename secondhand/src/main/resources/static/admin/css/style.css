@@ -56,6 +56,9 @@ header .right, .left {
     flex: 0 0 auto;
     margin: 0 40px; /* 중간 여백 */
 }
+header .right a,header .left a{
+    margin: 0 10px;
+}
 
 header .logo-menus{
     position: absolute;
