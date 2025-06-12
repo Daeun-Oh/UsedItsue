@@ -80,13 +80,3 @@ img {
 input {
     width: 450px;
 }
-form[name="frmSearch"] *{
-    height : 20px;
-    line-height : 20px;
-}
-form[name="frmSearch"] button{
-    height : 20px;
-    width:60px;
-    box-sizing:content-box;
-    font-size:13px;
-}

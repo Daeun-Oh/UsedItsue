@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+
 * {
     box-sizing: border-box;
     outline: none;
@@ -56,7 +58,6 @@ main > .main-content {
     flex-grow: 1;
     padding-right: 25px;
 }
-
 /* 관리자 기본 레이아웃 구성 E */
 
 /* 메뉴 공통 S */
@@ -328,6 +329,16 @@ input[type='checkbox'] + label.standalone {
 }
 /* 체크박스 공통 E */
 
+form[name="frmSearch"] *{
+    height : 40px;
+    line-height : 40px;
+}
+form[name="frmSearch"] button{
+    height : 40px;
+    width:60px;
+    box-sizing:content-box;
+    font-size:13px;
+}
 /* 페이징 공통 S */
 .pagination {
     display: flex;
