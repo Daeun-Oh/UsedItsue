@@ -43,7 +43,7 @@
         <tr>
             <th width="120">상품설명</th>
             <td>
-                <textarea id="description" name="description" th:field="*{description}"></textarea>
+                <textarea id="description" class="auto-grow" name="description" th:field="*{description}"></textarea>
                 <div class="error" th:each="err : ${#fields.errors('salePrice')}" th:text="${err}"></div>
             </td>
         </tr>
