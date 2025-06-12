@@ -7,23 +7,27 @@
     <h2>회원 검색</h2>
     <form name="frmSearch" method="get" th:action="@{/admin/member}" autocomplete="off" th:object="${memberSearch}">
         <table class="table-cols">
-            <th>회원권한</th>
-            <td>
-                <span th:each="auth : ${authorities}" class="checkbox">
-                    <input type="checkbox" name="authority" th:value="${auth.name()}" th:id="${'authority-' + auth.name()}">
-                    <label th:for="${'authority-' + auth.name()}" th:text="${#messages.msg('authority.' + auth.name())}"></label>
-                </span>
-            </td>
             <tr>
-                <th width="120">키워드 검색</th>
-                <td class="flex">
-                    <select name="sopt" th:field="*{sopt}" class="w180 mr5">
-                        <option value="ALL">통합 검색</option>
-                        <option value="EMAIL">이메일</option>
-                        <option value="NAME">회원명</option>
-                        <option value="MOBILE">휴대전화번호</option>
-                    </select>
-                    <input type="text" name="skey" th:field="*{skey}" placeholder="검색어를 입력하세요.">
+                <th width="120">회원권한</th>
+                <td>
+                    <span th:each="auth : ${authorities}" class="checkbox">
+                        <input type="checkbox" name="authority" th:value="${auth.name()}" th:id="${'authority-' + auth.name()}">
+                        <label th:for="${'authority-' + auth.name()}" th:text="${#messages.msg('authority.' + auth.name())}"></label>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>키워드 검색</th>
+                <td>
+                    <div class="flex">
+                        <select name="sopt" th:field="*{sopt}" class="w180 mr5">
+                            <option value="ALL">통합검색</option>
+                            <option value="EMAIL">이메일</option>
+                            <option value="NAME">회원명</option>
+                            <option value="MOBILE">휴대전화번호</option>
+                        </select>
+                        <input type="text" name="skey" th:field="*{skey}" placeholder="검색어를 입력하세요.">
+                    </div>
                 </td>
             </tr>
         </table>

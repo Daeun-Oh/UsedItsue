@@ -1,6 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
-
 * {
     box-sizing: border-box;
     outline: none;
@@ -17,7 +15,7 @@ body {
 }
 
 a {
-    color: #000;  /* <a>는 상속을 안 받기 때문에 한 번 더 컬러 초기화 */
+    color: #000;
     text-decoration: none;
 }
 
@@ -51,19 +49,21 @@ main > aside {
     width: 200px;
     background: #d5d5d5;
     min-height: 850px;
-    margin-right: 30px;
+    margin-right: 15px;
 }
 
 main > .main-content {
     flex-grow: 1;
+    padding-right: 25px;
 }
+
 /* 관리자 기본 레이아웃 구성 E */
 
 /* 메뉴 공통 S */
 main > aside a {
     display: block;
     padding: 25px 10px;
-    text-aline: center;
+    text-align: center;
     font-size: 1.5rem;
     font-weight: 700;
     border-bottom: 1px solid #212121;
@@ -72,10 +72,6 @@ main > aside a {
 main > aside a.on {
     background: #212121;
     color: #fff;
-}
-
-main > .main-content {
-    padding-right: 25px;
 }
 
 main > .main-content > nav {
@@ -94,7 +90,7 @@ main > .main-content > nav a {
 }
 
 main > .main-content > nav a.on {
-    background: #000;
+    background: #212121;
     color: #fff;
 }
 /* 메뉴 공통 E */
@@ -239,7 +235,7 @@ textarea {
 .button-group {
     display: flex;
     width: 550px;
-    margin: 20px auto;
+    margin: 0 auto;
 }
 
 .button-group .btn {
@@ -255,7 +251,7 @@ textarea {
     background: #000;
     color: #fff;
     min-width: 250px;
-    height: 45px;
+    min-height: 40px;
     border: 0;
     border-radius: 3px;
     display: block;

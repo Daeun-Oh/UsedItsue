@@ -2,13 +2,12 @@ package org.koreait.product.services;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.koreait.product.entities.Product;
-import org.koreait.product.repositories.ProductRepository;
 import org.koreait.global.search.ListData;
 import org.koreait.global.search.Pagination;
 import org.koreait.product.constants.ProductStatus;
 import org.koreait.product.controllers.ProductSearch;
 import org.koreait.product.entities.Product;
+import org.koreait.product.repositories.ProductRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -20,14 +19,14 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.List;
-
 @Lazy
 @Service
 @RequiredArgsConstructor
 public class ProductInfoService {
 
     private final ProductRepository repository;
+    private final JdbcTemplate jdbcTemplate;
+    private final HttpServletRequest request;
 
     public List<Product> searchProducts(String name, String category) {
         boolean hasName = name != null && !name.isBlank();
@@ -42,15 +41,15 @@ public class ProductInfoService {
         } else {
             return repository.findByCategory(category);
         }
-    private final JdbcTemplate jdbcTemplate;
-    private final HttpServletRequest request;
+    }
+
     /**
      * 회원 목록
      *
      * @param search
      * @return
      */
-    public ListData<Product> getList(ProductSearch search) {
+    public ListData<Product> getList(ProductSearch search, HttpServletRequest request) {
         int page = Math.max(search.getPage(), 1);   // 기본으로 page 1 지정
         int limit = search.getLimit();
         limit = limit < 1 ? 20 : limit;
@@ -91,6 +90,9 @@ public class ProductInfoService {
             params.add("%" + skey + "%");
         }
 
+        // 삭제되지 않은 상품만
+        addWhere.add("deletedAt IS NULL");
+
         StringBuffer sb = new StringBuffer(2000);
         StringBuffer sb2 = new StringBuffer(2000);
         sb.append("SELECT * FROM PRODUCT");
@@ -105,20 +107,24 @@ public class ProductInfoService {
         sb.append(" ORDER BY createdAt DESC");
         sb.append(" LIMIT ?, ?"); // 첫 번째 ?: offset, 두 번째 ?: limit
 
-        int total = jdbcTemplate.queryForObject(sb2.toString(), int.class, params.toArray()); // 검색 조건에 따른 전체 레코드 개수
+        // 검색 조건에 따른 전체 레코드 개수 조회
+        int total = jdbcTemplate.queryForObject(sb2.toString(), int.class, params.toArray());
 
+        // 페이징 파라미터 추가
         params.add(offset);  // 아래 쿼리의 첫 번째 물음표
         params.add(limit);   // 아래 쿼리의 두 번째 물음표
 
+        // 실제 데이터 조회
         List<Product> items = jdbcTemplate.query(sb.toString(), this::mapper, params.toArray());
 
-        // total = 100000;
-
+        // 페이징 정보 생성
         Pagination pagination = new Pagination(page, total, 10, 20, request);
+
 
         return new ListData<>(items, pagination);
     }
 
+    // RowMapper 구현
     private Product mapper(ResultSet rs, int i) throws SQLException {
         Product item = new Product();
         item.setSeq(rs.getLong("seq"));
