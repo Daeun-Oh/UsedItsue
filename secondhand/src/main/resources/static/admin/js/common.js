@@ -37,6 +37,28 @@ window.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    /* 공통 양식 처리 E */
+
+    /* 전체 선택 버튼 S */
+    const allCheckbox = document.getElementById("status-ALL");
+    const otherCheckboxes = document.querySelectorAll("input[name='status']:not(#status-ALL)");
+
+    if (allCheckbox) {
+        // 전체 선택 클릭 시 → 하위 전체 선택/해제
+        allCheckbox.addEventListener("change", function () {
+            otherCheckboxes.forEach(cb => cb.checked = this.checked);
+        });
+
+        // 하위 체크박스들 중 하나가 바뀌면 전체 상태도 조정
+        otherCheckboxes.forEach(cb => {
+            cb.addEventListener("change", function () {
+                const allChecked = Array.from(otherCheckboxes).every(c => c.checked);
+                allCheckbox.checked = allChecked;
+            });
+        });
+    }
+    /* 전체 선택 버튼 E */
+
     /* 전체 선택 버튼 S */
     const allCheckbox = document.getElementById("status-ALL");
     const otherCheckboxes = document.querySelectorAll("input[name='status']:not(#status-ALL)");
@@ -58,6 +80,20 @@ window.addEventListener("DOMContentLoaded", function() {
     /* 전체 선택 버튼 E */
 
 /* text 입력 자동 사이징 S */
+
+    // 상태 변경 후 iframe 응답 수신 시 체크박스 초기화
+    const iframe = document.querySelector('iframe[name="ifrmProcess"]');
+    if (iframe) {
+        iframe.addEventListener('load', function () {
+            // 상태 변경 후 iframe 로드 완료되면 체크박스 해제
+            document.querySelectorAll('input[name="chk"]:checked').forEach(cb => {
+                cb.checked = false;
+            });
+        });
+    }
+
+    /* text 입력 자동 사이징 S */
+
     document.addEventListener("input", function (e) {
         if (e.target.matches(".auto-grow")) {
             e.target.style.height = "auto";
