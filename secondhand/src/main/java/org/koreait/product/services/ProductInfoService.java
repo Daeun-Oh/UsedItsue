@@ -90,8 +90,8 @@ public class ProductInfoService {
             params.add("%" + skey + "%");
         }
 
-        // 삭제되지 않은 상품만
-        addWhere.add("deletedAt IS NULL");
+        // 삭제 처리된 레코드는 리스트에서 제외
+        // addWhere.add("deletedAt IS NULL");
 
         StringBuffer sb = new StringBuffer(2000);
         StringBuffer sb2 = new StringBuffer(2000);

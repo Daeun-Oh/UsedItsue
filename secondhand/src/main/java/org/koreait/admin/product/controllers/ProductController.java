@@ -66,6 +66,20 @@ public class ProductController extends CommonController {
         return "admin/product/list";
     }
 
+
+    /**
+     * 상품 정보 수정 or 삭제 후 이동할 페이지
+     */
+    @RequestMapping({"", "list"})
+    public String listPs(@RequestParam(name="chk", required = false) List<Integer> chks, Model model) {
+
+        updateService.processBatch(chks);
+
+        // 처리 완료 후에는 부모 창의 목록을 새로고침
+        model.addAttribute("script", "parent.location.reload();");
+        return "common/_execute_script";
+    }
+
     /**
      * 상품 등록
      */
