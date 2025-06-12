@@ -1,16 +1,14 @@
 package org.koreait.product.controllers;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.koreait.global.search.CommonSearch;
 import org.koreait.product.constants.ProductStatus;
-import org.springframework.data.relational.core.mapping.Table;
+
+import java.util.List;
 
 @Data
-@Table("PRODUCT")
+@EqualsAndHashCode(callSuper = true)
 public class ProductSearch extends CommonSearch {
-    @NotBlank
-    private String name;
-    private String category;
-    private ProductStatus status;
+    private List<ProductStatus> statusList;
 }
