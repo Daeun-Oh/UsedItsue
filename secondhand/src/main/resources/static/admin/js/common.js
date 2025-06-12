@@ -36,6 +36,7 @@ window.addEventListener("DOMContentLoaded", function() {
             alert('정말 처리하겠습니까?', () => formEl.submit());
         });
     }
+
     /* 전체 선택 버튼 S */
     const allCheckbox = document.getElementById("status-ALL");
     const otherCheckboxes = document.querySelectorAll("input[name='status']:not(#status-ALL)");
@@ -56,30 +57,17 @@ window.addEventListener("DOMContentLoaded", function() {
     }
     /* 전체 선택 버튼 E */
 
-        /* 공통 양식 처리 S */
+/* text 입력 자동 사이징 S */
+    document.addEventListener("input", function (e) {
+        if (e.target.matches(".auto-grow")) {
+            e.target.style.height = "auto";
+            e.target.style.height = e.target.scrollHeight + "px";
+        }
+        if (e.target.matches(".auto-stretch")) {
+            e.target.style.width = "auto";
+            e.target.style.width = e.target.scrollWidth + "px";
+        }
+    });
+    /* text 입력 자동 사이징 E */
 
-
-        // 상품 상태 변경 시 체크박스 자동 선택
-        document.querySelectorAll('.status-select').forEach(select => {
-            select.addEventListener('change', function () {
-                // id가 'newStatus_숫자' 형태라고 가정
-                const nameAttr = this.getAttribute('name'); // newStatus_3
-                const index = nameAttr?.split('_')[1]; // "3"
-                const checkbox = document.querySelector(`#chk-${index}`);
-                if (checkbox) checkbox.checked = true;
-            });
-        });
-
-        /* text 입력 자동 사이징 S */
-        document.addEventListener("input", function (e) {
-            if (e.target.matches(".auto-grow")) {
-                e.target.style.height = "auto";
-                e.target.style.height = e.target.scrollHeight + "px";
-            }
-            if (e.target.matches(".auto-stretch")) {
-                e.target.style.width = "auto";
-                e.target.style.width = e.target.scrollWidth + "px";
-            }
-        });
-        /* text 입력 자동 사이징 E */
 });
