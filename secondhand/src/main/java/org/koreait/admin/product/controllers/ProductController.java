@@ -16,7 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.koreait.services.ProductFileUploadService;
+import org.koreait.product.services.ProductFileUploadService;
 
 import java.util.ArrayList;
 import java.util.List;
