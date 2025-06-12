@@ -161,12 +161,16 @@ public class ProductController extends CommonController {
         code = StringUtils.hasText(code) ? code : "list";
         String pageTitle = "";
 
+        List<String> addCommonCss = new ArrayList<>();
+        List<String> addCss = new ArrayList<>();
         List<String> addCommonScript = new ArrayList<>();
         List<String> addScript = new ArrayList<>();
 
         if (List.of("register", "update").contains(code)) { // 상품 등록 or 상품 수정
+            addCommonCss.add("fileManager");
+            addCss.add("product/style");
             addCommonScript.add("fileManager");
-            addScript.add("product/form");  // 파일 업로드 후속 처리 또는 양식 처리 관련
+            addScript.add("product/script");
             pageTitle = code.equals("update") ? "상품 정보 수정" : "상품 등록";
         } else if (code.equals("list")) {  // 상품 목록
             pageTitle = "상품 목록";
@@ -174,6 +178,8 @@ public class ProductController extends CommonController {
 
         model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("subCode", code);
+        model.addAttribute("addCommonCss", addCommonCss);
+        model.addAttribute("addCss", addCss);
         model.addAttribute("addCommonScript", addCommonScript);
         model.addAttribute("addScript", addScript);
     }
