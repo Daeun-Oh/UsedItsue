@@ -1,15 +1,21 @@
 window.addEventListener("DOMContentLoaded", function() {
     /* 전체 토글 공통 기능 처리 S */
-    // 해야 할 일: 모두 체크상태일 때, check-all도 체크 처리 / check-all이 체크 상태일 때, 목록 중 하나 해제 시 check-all도 체크 해제
-    const chkAlls = document.getElementsByClassName("check-all");
-    for (const el of chkAlls) {
-        el.addEventListener("click", function() {
-            const {targetName} = this.dataset;
-            console.log(targetName);
-            const chks = document.getElementsByName(targetName);
-            for (const chk of chks) {
-                chk.checked = this.checked;
-            }
+    const checkAll = document.getElementById("check-all");
+    const targetName = checkAll.dataset.targetName;
+    const childCheckboxes = document.getElementsByName(targetName);
+
+    // 1. check-all 클릭 → 하위 체크박스 전체 체크/해제
+    checkAll.addEventListener("change", function () {
+        for (const chk of childCheckboxes) {
+            chk.checked = this.checked;
+        }
+    });
+
+    // 2. 하위 체크박스 중 하나라도 변경되면 → check-all 상태 갱신
+    for (const chk of childCheckboxes) {
+        chk.addEventListener("change", function () {
+            const allChecked = Array.from(childCheckboxes).every(c => c.checked);
+            checkAll.checked = allChecked;
         });
     }
     /* 전체 토글 공통 기능 처리 E */
