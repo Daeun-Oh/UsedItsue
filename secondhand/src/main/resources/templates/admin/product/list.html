@@ -22,7 +22,6 @@
                     <div class="flex">
                         <select name="sopt" th:field="*{sopt}" class="w180 mr5">
                             <option value="ALL">통합 검색</option>
-
                             <option value="NAME">상품명</option>
                             <option value="CATEGORY">카테고리</option>
                         </select>
@@ -33,10 +32,9 @@
         </table>
         <button type="submit" class="submit-btn">검색하기</button>
     </form>
-    <h2>상품 목록</h2>
-    <!-- target="ifrmProcess" - target을 현재 페이지 내 다른 창으로 설정해, PATCH 후에도 웹페이지 이동이 일어나지 않게 함 -->
-    <form name="frmList" method="POST" th:action="@{/admin/product}" autocomplete="off" target="ifrmProcess">
 
+    <h2>상품 목록</h2>
+    <form name="frmList" method="POST" th:action="@{/admin/product}" autocomplete="off" target="ifrmProcess">
         <input type="hidden" name="_method" value="PATCH">
         <table class="table-rows">
             <thead>
@@ -45,6 +43,7 @@
                     <input type="checkbox" class="check-all" id="check-all" data-target-name="chk">
                     <label for="check-all" class="standalone"></label>
                 </th>
+                <th width="80">이미지</th> <!-- 이미지 컬럼 추가 -->
                 <th>상품명</th>
                 <th>분류</th>
                 <th>판매 상태</th>
@@ -63,12 +62,30 @@
                     <input type="checkbox" name="chk" th:value="${status.index}" th:id="${'chk-' + status.index}">
                     <label th:for="${'chk-' + status.index}" class="standalone"></label>
                 </td>
+
+                <!-- 이미지 표시 컬럼 -->
+                <td align="center" class="product-image-cell">
+                    <div class="image-container">
+                        <img th:if="*{imagePath != null and !#strings.isEmpty(imagePath)}"
+                             th:src="*{imagePath}"
+                             th:alt="*{name}"
+                             class="product-thumbnail"
+                             onclick="showImageModal(this.src, this.alt)">
+                        <div th:unless="*{imagePath != null and !#strings.isEmpty(imagePath)}"
+                             class="no-image">
+                            📷
+                        </div>
+                    </div>
+                </td>
+
                 <td align="center" th:text="*{name}"></td>
                 <td align="center" th:text="*{category}"></td>
                 <td align="center" th:text="#{${#strings.concat('productStatus.', item.status.name())}}"></td>
-                <td align="center" th:text="*{consumerPrice}"></td>
-                <td align="center" th:text="*{salePrice}"></td>
-                <td align="center" th:text="*{description}"></td>
+                <td align="center" th:text="${#numbers.formatInteger(item.consumerPrice, 0, 'COMMA')} + '원'"></td>
+                <td align="center" th:text="${#numbers.formatInteger(item.salePrice, 0, 'COMMA')} + '원'"></td>
+                <td align="center">
+                    <div class="description-preview" th:text="*{#strings.abbreviate(description, 30)}"></div>
+                </td>
                 <td align="center" th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}"></td>
                 <td align="center">
                     <th:block th:if="*{deletedAt != null}">
@@ -82,7 +99,7 @@
                 <td th:text="*{#temporals.format(createdAt, 'yy.MM.dd HH:mm')}" align="center"></td>
             </tr>
             <tr th:unless="${items != null && !items.isEmpty()}">
-                <td colspan="7" class="no-data">
+                <td colspan="11" class="no-data"> <!-- colspan 수정 -->
                     조회된 상품이 없습니다.
                 </td>
             </tr>
@@ -94,5 +111,174 @@
         </div>
     </form>
     <th:block th:replace="~{common/_pagination::pagination}"></th:block>
+
+    <!-- 이미지 모달 -->
+    <div id="imageModal" class="image-modal" onclick="closeImageModal()">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeImageModal()">&times;</span>
+            <img id="modalImage" src="" alt="">
+            <div id="modalCaption" class="modal-caption"></div>
+        </div>
+    </div>
 </section>
+
+<!-- CSS 스타일 -->
+<style layout:fragment="style">
+    /* 상품 이미지 썸네일 스타일 */
+    .product-image-cell {
+        padding: 8px !important;
+    }
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 60px;
+        height: 60px;
+        margin: 0 auto;
+    }
+
+    .product-thumbnail {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .product-thumbnail:hover {
+        transform: scale(1.1);
+        border-color: #007bff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+    }
+
+    .no-image {
+        width: 60px;
+        height: 60px;
+        background-color: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        color: #6c757d;
+    }
+
+    /* 설명 미리보기 스타일 */
+    .description-preview {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* 이미지 모달 스타일 */
+    .image-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+        position: relative;
+        margin: auto;
+        padding: 20px;
+        max-width: 90%;
+        max-height: 90%;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+    }
+
+    .modal-content img {
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .close-btn:hover {
+        color: #ccc;
+    }
+
+    .modal-caption {
+        color: white;
+        margin-top: 15px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    /* 가격 표시 개선 */
+    td:nth-child(6), td:nth-child(7) {
+        font-weight: 500;
+        color: #e74c3c;
+    }
+
+    /* 반응형 테이블 */
+    @media (max-width: 768px) {
+        .product-thumbnail, .no-image {
+            width: 40px;
+            height: 40px;
+        }
+
+        .description-preview {
+            max-width: 100px;
+        }
+    }
+</style>
+
+<!-- JavaScript -->
+<script layout:fragment="script">
+    // 이미지 모달 표시
+    function showImageModal(src, alt) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const modalCaption = document.getElementById('modalCaption');
+
+        modal.style.display = 'block';
+        modalImg.src = src;
+        modalCaption.textContent = alt;
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+    }
+
+    // 이미지 모달 닫기
+    function closeImageModal() {
+        const modal = document.getElementById('imageModal');
+        modal.style.display = 'none';
+
+        // 이벤트 리스너 제거
+        document.removeEventListener('keydown', arguments.callee);
+    }
+</script>
 </html>

@@ -27,6 +27,7 @@ spring:
       maxFileSize: 20MB
       maxRequestSize: 60MB
       fileSizeThreshold: 30MB
+      enabled: true
 
 # 로깅 설정
 logging:
@@ -37,8 +38,7 @@ logging:
 file:
   upload:
     url: ${file.url}
-    path: ${file.path}
-
+    path: ./src/main/resources/static/uploads/products/
 
 # 파이썬 설정
 python:

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.koreait.product.constants.ProductStatus;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class RequestProduct {
@@ -26,4 +27,8 @@ public class RequestProduct {
     private int salePrice;
 
     private String description;
+
+    private MultipartFile image;
+
+    private String imagePath;
 }

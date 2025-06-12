@@ -139,6 +139,8 @@ public class ProductInfoService {
         Timestamp modifiedAt = rs.getTimestamp("modifiedAt");
         Timestamp deletedAt = rs.getTimestamp("deletedAt");
 
+        item.setImagePath(rs.getString("imagePath"));
+
         item.setCreatedAt(createdAt == null ? null : createdAt.toLocalDateTime());
         item.setModifiedAt(modifiedAt == null ? null : modifiedAt.toLocalDateTime());
         item.setDeletedAt(deletedAt == null ? null : deletedAt.toLocalDateTime());

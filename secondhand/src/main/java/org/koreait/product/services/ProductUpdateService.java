@@ -44,6 +44,11 @@ public class ProductUpdateService {
             item.setGid(form.getGid());
         }
 
+        // 이미지 정보
+        if (form.getImagePath()!= null && !form.getImagePath().isEmpty()) {
+            item.setImagePath(form.getImagePath());
+        }
+
         // 공통 저장 정보
         item.setName(form.getName());
         item.setCategory(form.getCategory());
@@ -51,6 +56,8 @@ public class ProductUpdateService {
         item.setConsumerPrice(form.getConsumerPrice());
         item.setSalePrice(form.getSalePrice());
         item.setDescription(form.getDescription());
+
+        System.out.println("라이츄");
 
         repository.save(item);
 
