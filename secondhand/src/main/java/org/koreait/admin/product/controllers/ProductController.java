@@ -133,9 +133,12 @@ public class ProductController extends CommonController {
 
             if (form.getImage() != null && !form.getImage().isEmpty()) {
                 String imagePath = fileUploadService.uploadImage(form.getImage());
+                if (imagePath != null && imagePath.length() > 0 && imagePath.charAt(0) == '/') {
+                    imagePath = imagePath.substring(1);
+                }
+                System.out.println(imagePath);
                 form.setImagePath(imagePath);
             }
-            System.out.println("피카츄");
 
             updateService.process(form);
 
@@ -144,7 +147,6 @@ public class ProductController extends CommonController {
             return "redirect:/admin/product";
         }
         catch (Exception e) {
-            System.out.println("뭔가 잘못됨");
             e.printStackTrace();
             return "admin/product/add";
         }

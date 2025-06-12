@@ -71,10 +71,11 @@
                 <td align="center" class="product-image-cell">
                     <div class="image-container">
                         <img th:if="*{imagePath != null and !#strings.isEmpty(imagePath)}"
-                             th:src="*{imagePath}"
+                             th:src="@{*{imagePath}}"
                              th:alt="*{name}"
                              class="product-thumbnail"
                              onclick="showImageModal(this.src, this.alt)">
+
                         <div th:unless="*{imagePath != null and !#strings.isEmpty(imagePath)}"
                              class="no-image">
                             📷
