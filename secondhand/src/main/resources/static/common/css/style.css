@@ -5,3 +5,29 @@
 .flex {
     display: flex;
 }
+
+footer{
+    margin:50px auto;
+    width:600px;
+    height: 100px;
+    text-align:center;
+    justify-content: center;
+    color: #012d1c;
+    font-size:0.8em;
+}
+
+footer>div.flex{
+    display:flex;
+    grow:1;
+    a:first-child{
+        border:0 !important;
+    }
+    margin-bottom:10px;
+    box-shadow: 0 0 4px rgba(1, 45, 28, 0.1);
+}
+footer a {
+    padding: 10px 20px;
+    width:14%;
+    border-left:1px solid #012d1c;
+    box-sizing:border-box;
+}
