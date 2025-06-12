@@ -38,6 +38,18 @@ window.addEventListener("DOMContentLoaded", function() {
     }
     /* 공통 양식 처리 S */
 
+
+    // 상품 상태 변경 시 체크박스 자동 선택
+    document.querySelectorAll('.status-select').forEach(select => {
+        select.addEventListener('change', function () {
+            // id가 'newStatus_숫자' 형태라고 가정
+            const nameAttr = this.getAttribute('name'); // newStatus_3
+            const index = nameAttr?.split('_')[1]; // "3"
+            const checkbox = document.querySelector(`#chk-${index}`);
+            if (checkbox) checkbox.checked = true;
+        });
+    });
+
     /* text 입력 자동 사이징 S */
     document.addEventListener("input", function (e) {
         if (e.target.matches(".auto-grow")) {
@@ -50,4 +62,5 @@ window.addEventListener("DOMContentLoaded", function() {
         }
     });
     /* text 입력 자동 사이징 E */
+
 });
