@@ -1,4 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Yeon+Sung&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+
 * {
     box-sizing: border-box;
     outline: none;
@@ -35,12 +37,35 @@ img {
 }
 
 /* 관리자 기본 레이아웃 구성 S */
+/* 헤더 설정 S */
 header {
     height: 80px;
     background: #fff;
     border-bottom: 3px solid #012d1c;
+    flex-grow:1;
+}
+.top {
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px; /* 양 끝 여백 */
+    height: 80px;
 }
 
+header .right, .left {
+    flex: 0 0 auto;
+    margin: 0 40px; /* 중간 여백 */
+}
+header .right a,header .left a{
+    margin: 0 10px;
+}
+
+header .logo-menus{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+/* 헤더 설정 E */
 main {
     display: flex;
 }
@@ -56,7 +81,6 @@ main > .main-content {
     flex-grow: 1;
     padding-right: 25px;
 }
-
 /* 관리자 기본 레이아웃 구성 E */
 
 /* 메뉴 공통 S */
@@ -109,6 +133,12 @@ select {
     width: 100%;
 }
 
+textarea.auto-stretch {
+  resize: none;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
 select {
     padding: 0;
 }
@@ -122,6 +152,13 @@ textarea {
     width: 100%;
 }
 
+textarea.auto-grow {
+  width: 100%;
+  resize: none;
+  overflow: hidden;
+  min-height: 40px;
+  box-sizing: border-box;
+}
 /*  공통 입력 항목 E */
 
 /* 테이블 공통 S */
@@ -235,7 +272,7 @@ textarea {
 .button-group {
     display: flex;
     width: 550px;
-    margin: 0 auto;
+    margin: 30px auto;
 }
 
 .button-group .btn {
@@ -328,6 +365,16 @@ input[type='checkbox'] + label.standalone {
 }
 /* 체크박스 공통 E */
 
+form[name="frmSearch"] *{
+    height : 40px;
+    line-height : 40px;
+}
+form[name="frmSearch"] button{
+    height : 40px;
+    width:60px;
+    box-sizing:content-box;
+    font-size:13px;
+}
 /* 페이징 공통 S */
 .pagination {
     display: flex;
