@@ -28,16 +28,16 @@ public class ProductInfoService {
     private final JdbcTemplate jdbcTemplate;
     private final HttpServletRequest request;
 
-    public List<Product> searchProducts(String productName, String category) {
-        boolean hasName = productName != null && !productName.isBlank();
+    public List<Product> searchProducts(String name, String category) {
+        boolean hasName = name != null && !name.isBlank();
         boolean hasCategory = category != null && !category.isBlank();
 
         if (!hasName && !hasCategory) {
             return repository.findAll();
         } else if (hasName && hasCategory) {
-            return repository.findByNameAndCategory(productName, category);
+            return repository.findByNameAndCategory(name, category);
         } else if (hasName) {
-            return repository.findByName(productName);
+            return repository.findByName(name);
         } else {
             return repository.findByCategory(category);
         }
