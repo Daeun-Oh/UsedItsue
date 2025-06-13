@@ -80,7 +80,7 @@ public class ProductController extends CommonController {
      */
     @RequestMapping({"", "list"})
     public String listPs(@RequestParam(name = "chk", required = false) List<Integer> chks, Model model) {
-
+        System.out.println("수정삭제!!!!!!!!");
         updateService.processBatch(chks);
 
         // 처리 완료 후에는 부모 창의 목록을 새로고침
@@ -184,7 +184,7 @@ public class ProductController extends CommonController {
      * @return 상태 변경 후 실행할 스크립트 뷰 경로
      */
     @PatchMapping({"", "list"})
-    public String updateStatus(HttpServletRequest request, Model model) {
+    public String updateStatus(@RequestParam(name = "chk", required = false) List<Integer> chks, HttpServletRequest request, Model model) {
         String[] chkIndexes = request.getParameterValues("chk");
 
         if (chkIndexes == null || chkIndexes.length == 0) {
@@ -209,8 +209,11 @@ public class ProductController extends CommonController {
             }
         }
 
+        updateService.processBatch(chks);
+
         updateService.updateStatus(ids, statuses); // 리스트로 처리
 
+        model.addAttribute("script", "parent.location.reload();");
         return "common/_execute_script";
     }
 }
