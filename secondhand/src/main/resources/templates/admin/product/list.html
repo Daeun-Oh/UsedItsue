@@ -97,6 +97,7 @@
                 <td align="center" th:text="${#numbers.formatInteger(item.salePrice, 0, 'COMMA')} + '원'"></td>
                 <td align="center">
                     <div class="description-preview" th:text="*{#strings.abbreviate(description, 30)}"></div>
+                </td>
                 <td align="center">
                     <div th:text="*{#temporals.format(modifiedAt, 'yy.MM.dd HH:mm')}" align="center"></div>
                 </td>

@@ -86,10 +86,8 @@ public class ProductUpdateService {
                 System.out.println("삭제");
             } else { // 수정처리
                 // 상품 수정 일시 업데이트
-//                boolean updateModifiedAt = Boolean.parseBoolean(Objects.requireNonNullElse(utils.getParam("updateModifiedAt_" + chk), "false"));
-//                if (updateModifiedAt) {
-//                    product.setModifiedAt(LocalDateTime.now());
-//                }
+                product.setModifiedAt(LocalDateTime.now());
+
                 System.out.println("수정");
                 // 상품 등록 해제 취소
                 boolean cancelDelete = Boolean.parseBoolean(Objects.requireNonNullElse(utils.getParam("cancelDelete_" + chk), "false"));
