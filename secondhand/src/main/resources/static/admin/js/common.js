@@ -88,7 +88,8 @@ window.addEventListener("DOMContentLoaded", function() {
         }
     });
     /* text 입력 자동 사이징 E */
-
+  
+  
     // 상품 상태 변경 시 체크박스 자동 선택
     document.querySelectorAll('.status-select').forEach(select => {
         select.addEventListener('change', function () {

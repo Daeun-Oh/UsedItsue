@@ -154,7 +154,6 @@ textarea {
 
 textarea.auto-grow {
   width: 100%;
-  resize: none;
   overflow: hidden;
   min-height: 40px;
   box-sizing: border-box;
