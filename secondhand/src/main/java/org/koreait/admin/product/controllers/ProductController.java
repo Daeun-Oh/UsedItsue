@@ -183,7 +183,7 @@ public class ProductController extends CommonController {
      * @param model   뷰로 전달할 데이터 모델
      * @return 상태 변경 후 실행할 스크립트 뷰 경로
      */
-    @PatchMapping("")
+    @PatchMapping({"", "list"})
     public String updateStatus(HttpServletRequest request, Model model) {
         String[] chkIndexes = request.getParameterValues("chk");
 
