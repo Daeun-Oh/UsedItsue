@@ -88,26 +88,4 @@ window.addEventListener("DOMContentLoaded", function() {
         }
     });
     /* text 입력 자동 사이징 E */
-
-    // 상품 상태 변경 시 체크박스 자동 선택
-    document.querySelectorAll('.status-select').forEach(select => {
-        select.addEventListener('change', function () {
-            // id가 'newStatus_숫자' 형태라고 가정
-            const nameAttr = this.getAttribute('name'); // newStatus_3
-            const index = nameAttr?.split('_')[1]; // "3"
-            const checkbox = document.querySelector(`#chk-${index}`);
-            if (checkbox) checkbox.checked = true;
-        });
-    });
-
-    // 상태 변경 후 iframe 응답 수신 시 체크박스 초기화
-    const iframe = document.querySelector('iframe[name="ifrmProcess"]');
-    if (iframe) {
-        iframe.addEventListener('load', function () {
-            // 상태 변경 후 iframe 로드 완료되면 체크박스 해제
-            document.querySelectorAll('input[name="chk"]:checked').forEach(cb => {
-                cb.checked = false;
-            });
-        });
-    }
 });

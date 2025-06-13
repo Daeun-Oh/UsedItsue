@@ -116,15 +116,12 @@ public class ProductController extends CommonController {
      */
     @PostMapping("/save")
     public String saveProduct(@Valid RequestProduct form, Errors errors, Model model) {
-        try {
-            System.out.println("렛츠고");
+
 
             String mode = Objects.requireNonNullElse(form.getMode(), "add");
             commonProcess(mode.equals("edit") ? "register" : "update", model);
 
             if (errors.hasErrors()) {
-                System.out.println("이브이");
-                System.out.println("=== 오류 목록 ===");
                 errors.getFieldErrors().forEach(error -> {
                     System.out.println("필드: " + error.getField() + ", 오류: " + error.getDefaultMessage());
                 });
@@ -132,10 +129,7 @@ public class ProductController extends CommonController {
             }
 
             if (form.getImage() != null && !form.getImage().isEmpty()) {
-                String imagePath = fileUploadService.uploadImage(form.getImage());
-                if (imagePath != null && imagePath.length() > 0 && imagePath.charAt(0) == '/') {
-                    imagePath = imagePath.substring(1);
-                }
+                String imagePath = fileUploadService.getUploadImagePath(form.getImage(), form.getGid());
                 System.out.println(imagePath);
                 form.setImagePath(imagePath);
             }
@@ -145,13 +139,9 @@ public class ProductController extends CommonController {
 
             // 상품 등록 완료 후 상품 목록으로 이동
             return "redirect:/admin/product";
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return "admin/product/add";
-        }
-
     }
+
+
 
     /**
      * 공통 처리 부분
@@ -169,9 +159,9 @@ public class ProductController extends CommonController {
         List<String> addScript = new ArrayList<>();
 
         if (List.of("register", "update").contains(code)) { // 상품 등록 or 상품 수정
-            addCommonCss.add("fileManager");
+            addCommonCss.add("style");
             addCss.add("product/style");
-            addCommonScript.add("fileManager");
+            addCommonScript.add("common");
             addScript.add("product/script");
             pageTitle = code.equals("update") ? "상품 정보 수정" : "상품 등록";
         } else if (code.equals("list")) {  // 상품 목록
@@ -193,7 +183,7 @@ public class ProductController extends CommonController {
      * @param model   뷰로 전달할 데이터 모델
      * @return 상태 변경 후 실행할 스크립트 뷰 경로
      */
-    @PatchMapping("/status")
+    @PatchMapping("")
     public String updateStatus(HttpServletRequest request, Model model) {
         String[] chkIndexes = request.getParameterValues("chk");
 
@@ -222,6 +212,5 @@ public class ProductController extends CommonController {
         updateService.updateStatus(ids, statuses); // 리스트로 처리
 
         return "common/_execute_script";
-
     }
 }
